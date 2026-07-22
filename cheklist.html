@@ -1,0 +1,2015 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Чеклист · Просмотры</title>
+    <style>
+        /* ===== ПЕРЕМЕННЫЕ ТЕМ (акцент бирюзовый) ===== */
+        :root {
+            --bg-body: #f0f4f9;
+            --bg-sidebar: #1a2a2e;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --text-primary: #1a2a2e;
+            --text-secondary: #4a6a6e;
+            --text-muted: #8aa0a8;
+            --border-color: #dce4e8;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --accent: #1abc9c;
+            --accent-hover: #16a085;
+            --accent-light: #d5f5e8;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --radius: 12px;
+            --transition: 0.25s ease;
+            --sidebar-width: 220px;
+        }
+        .theme-dark {
+            --bg-body: #121a1e;
+            --bg-sidebar: #0c1418;
+            --bg-header: #182228;
+            --bg-card: #1c2a30;
+            --bg-modal: #1c2a30;
+            --text-primary: #e0ecee;
+            --text-secondary: #a0b8be;
+            --text-muted: #6a8288;
+            --border-color: #2a3a40;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --accent: #1abc9c;
+            --accent-hover: #16a085;
+            --accent-light: #1a3a3a;
+        }
+        .theme-purple {
+            --bg-body: #16101f;
+            --bg-sidebar: #0f0a18;
+            --bg-header: #1e152e;
+            --bg-card: #261d3a;
+            --bg-modal: #261d3a;
+            --text-primary: #efe8fc;
+            --text-secondary: #c4b5e0;
+            --text-muted: #8a7aaa;
+            --border-color: #3a2a50;
+            --accent: #b388ff;
+            --accent-hover: #9a70e0;
+            --accent-light: #2a1a44;
+        }
+        .theme-green {
+            --bg-body: #0e1a12;
+            --bg-sidebar: #08120a;
+            --bg-header: #14261a;
+            --bg-card: #1a2e1e;
+            --bg-modal: #1a2e1e;
+            --text-primary: #ddf0e0;
+            --text-secondary: #98b89e;
+            --text-muted: #5a7a5e;
+            --border-color: #2a442e;
+            --accent: #66bb6a;
+            --accent-hover: #4caf50;
+            --accent-light: #1a3a1e;
+        }
+        .theme-blue {
+            --bg-body: #0b182a;
+            --bg-sidebar: #06101c;
+            --bg-header: #102236;
+            --bg-card: #142b44;
+            --bg-modal: #142b44;
+            --text-primary: #dceaf6;
+            --text-secondary: #90b0cc;
+            --text-muted: #5a7a96;
+            --border-color: #1e405e;
+            --accent: #4fc3f7;
+            --accent-hover: #29b6f6;
+            --accent-light: #1a3a5a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            transition: width 0.3s, background var(--transition);
+            overflow: hidden;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        .sidebar .logo {
+            padding: 20px 18px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar .logo span {
+            background: var(--accent);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+        .sidebar nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .sidebar nav button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        .sidebar nav button .icon {
+            font-size: 1.4rem;
+            width: 28px;
+            text-align: center;
+        }
+        .sidebar nav button:hover {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-primary);
+        }
+        .sidebar nav button.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+        .sidebar .user-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar .user-footer .avatar-small {
+            font-size: 1.6rem;
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-body);
+            transition: background var(--transition);
+        }
+
+        /* ===== HEADER ===== */
+        .top-header {
+            background: var(--bg-header);
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition), border var(--transition);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .top-header .left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .top-header .left .hamburger {
+            display: none;
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .top-header .left .page-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .top-header .right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .top-header .right .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-body);
+            padding: 4px 14px 4px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .top-header .right .user-badge .avatar {
+            font-size: 1.6rem;
+        }
+        .top-header .right .user-badge .info {
+            line-height: 1.2;
+        }
+        .top-header .right .user-badge .info .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .top-header .right .user-badge .info .level {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .top-header .right .level-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+        }
+        .top-header .right .level-bar .bar-bg {
+            width: 80px;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .top-header .right .level-bar .bar-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .top-header .right .coins-xp {
+            display: flex;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .top-header .right .coins-xp span {
+            background: var(--bg-body);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            padding: 24px 28px;
+            overflow-y: auto;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== DASHBOARD WIDGETS ===== */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .widget {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: background var(--transition), border var(--transition);
+        }
+        .widget .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .widget .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .daily-bonus-widget {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .daily-bonus-widget button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .daily-bonus-widget button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .daily-bonus-widget button:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        .category-progress,
+        .recent-items {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .category-progress .title,
+        .recent-items .title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 6px 0;
+            cursor: pointer;
+            padding: 4px 0;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .category-row:hover {
+            background: var(--accent-light);
+        }
+        .category-row .cat-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .category-row .cat-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.4s;
+        }
+        .recent-item {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        .recent-item:last-child { border-bottom: none; }
+        .tag {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* ===== LIBRARY TABLE ===== */
+        .library-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .library-controls input,
+        .library-controls select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            flex: 1 1 130px;
+        }
+        .library-controls .add-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .library-controls .add-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+        table.items-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        table.items-table th {
+            background: var(--bg-body);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        table.items-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        table.items-table tr:hover td {
+            background: var(--accent-light);
+        }
+        .item-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .item-actions button {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .item-actions button:hover {
+            background: var(--accent-light);
+        }
+        .status-badge {
+            font-weight: 600;
+        }
+        .status-badge.done {
+            color: var(--success);
+        }
+        .status-badge.pending {
+            color: var(--text-muted);
+        }
+        .stars {
+            color: #f1c40f;
+            letter-spacing: 2px;
+        }
+
+        /* ===== CATEGORIES MANAGEMENT ===== */
+        .cat-mgmt {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .cat-mgmt .cat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .cat-mgmt .cat-row:last-child { border-bottom: none; }
+        .cat-mgmt .cat-actions button {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+        .cat-mgmt .cat-actions button:hover {
+            color: var(--text-primary);
+        }
+        .add-cat-btn {
+            margin-top: 12px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .add-cat-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* ===== STATS ===== */
+        .stats-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .stats-filters button {
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all var(--transition);
+        }
+        .stats-filters button.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stats-grid .stat-item {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .stats-grid .stat-item .num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        canvas {
+            max-width: 100%;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            margin: 12px 0;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+        .chart-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .chart-wrapper .chart-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+        }
+        .no-data {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        .history-table {
+            width: 100%;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .history-table th,
+        .history-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        /* ===== PROFILE ===== */
+        .profile-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .profile-section h3 {
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+        .profile-section label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .profile-section input,
+        .profile-section select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 10px 0 16px;
+        }
+        .avatar-grid button {
+            font-size: 2rem;
+            background: var(--bg-body);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 6px;
+            transition: all 0.2s;
+        }
+        .avatar-grid button.active {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: scale(1.05);
+        }
+        .settings-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .settings-row label {
+            min-width: 140px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .settings-row input {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s;
+        }
+        .modal-overlay.hidden { display: none; }
+        .modal-box {
+            background: var(--bg-modal);
+            border-radius: var(--radius);
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .modal-box h3 { margin-bottom: 18px; font-size: 1.3rem; }
+        .modal-box .field { margin-bottom: 16px; }
+        .modal-box label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .modal-box input,
+        .modal-box select,
+        .modal-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 320px;
+            width: 100%;
+        }
+        .toast {
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease;
+        }
+        .toast-success { border-left-color: var(--success); }
+        .toast-error { border-left-color: var(--danger); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 220px;
+                z-index: 200;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .top-header .left .hamburger { display: block; }
+            .content { padding: 16px; }
+            .widget-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .avatar-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .widget-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .top-header .right .level-bar .bar-bg { width: 50px; }
+        }
+
+        .hidden { display: none !important; }
+        .empty-msg { text-align: center; color: var(--text-muted); padding: 40px 0; }
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 150;
+        }
+        .sidebar-overlay.show { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">📋 Чеклист <span>v1</span></div>
+        <nav>
+            <button data-tab="dashboard" class="active"><span class="icon">📊</span> Дашборд</button>
+            <button data-tab="library"><span class="icon">📖</span> Библиотека</button>
+            <button data-tab="categories"><span class="icon">🏷️</span> Категории</button>
+            <button data-tab="stats"><span class="icon">📈</span> Статистика</button>
+            <button data-tab="profile"><span class="icon">⚙️</span> Профиль</button>
+        </nav>
+        <div class="user-footer">
+            <span class="avatar-small" id="sidebarAvatar">📋</span>
+            <span id="sidebarName">Ученик</span>
+        </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <header class="top-header">
+            <div class="left">
+                <button class="hamburger" id="hamburgerBtn">☰</button>
+                <span class="page-title" id="pageTitle">Дашборд</span>
+            </div>
+            <div class="right">
+                <div class="user-badge">
+                    <span class="avatar" id="headerAvatar">📋</span>
+                    <div class="info">
+                        <div class="name" id="headerName">Ученик</div>
+                        <div class="level">Ур. <span id="headerLevel">1</span></div>
+                    </div>
+                </div>
+                <div class="level-bar">
+                    <span id="xpLabel">0/50</span>
+                    <span class="bar-bg"><span class="bar-fill" id="xpBar" style="width:0%"></span></span>
+                </div>
+                <div class="coins-xp">
+                    <span>🪙 <span id="headerCoins">0</span></span>
+                    <span>⚡ <span id="headerXp">0</span></span>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <section class="tab-content active" id="tab-dashboard">
+                <div class="widget-grid">
+                    <div class="widget"><div class="number" id="totalItems">0</div><div class="label">Всего</div></div>
+                    <div class="widget"><div class="number" id="doneItems">0</div><div class="label">Просмотрено</div></div>
+                    <div class="widget"><div class="number" id="pctDone">0%</div><div class="label">Процент</div></div>
+                    <div class="widget"><div class="number" id="totalXpEarned">0</div><div class="label">Заработано XP</div></div>
+                </div>
+
+                <div class="daily-bonus-widget">
+                    <span>Ежедневный бонус <span id="streakInfo">(серия: 0)</span></span>
+                    <button id="dailyBonusBtn">🎁 Забрать</button>
+                </div>
+
+                <div class="category-progress">
+                    <div class="title">Прогресс по категориям</div>
+                    <div id="categoryProgressList"></div>
+                </div>
+
+                <div class="recent-items">
+                    <div class="title">Недавно добавленные</div>
+                    <div id="recentItemsList"></div>
+                </div>
+            </section>
+
+            <!-- LIBRARY -->
+            <section class="tab-content" id="tab-library">
+                <div class="library-controls">
+                    <input type="text" id="searchInput" placeholder="Поиск...">
+                    <select id="categoryFilter"><option value="all">Все категории</option></select>
+                    <select id="statusFilter"><option value="all">Все</option><option value="done">Просмотрено</option><option value="pending">Не просмотрено</option></select>
+                    <select id="ratingFilter"><option value="all">Любая оценка</option><option value="1">⭐</option><option value="2">⭐⭐</option><option value="3">⭐⭐⭐</option><option value="4">⭐⭐⭐⭐</option><option value="5">⭐⭐⭐⭐⭐</option></select>
+                    <select id="sortSelect"><option value="newest">Новые</option><option value="az">А–Я</option><option value="rating">По оценке</option></select>
+                    <button class="add-btn" id="addItemBtn">+ Добавить</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="items-table">
+                        <thead><tr><th>Название</th><th>Категория</th><th>Статус</th><th>Оценка</th><th>Дата</th><th>Действия</th></tr></thead>
+                        <tbody id="itemsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CATEGORIES -->
+            <section class="tab-content" id="tab-categories">
+                <div class="cat-mgmt">
+                    <h3 style="margin-bottom:12px;">Управление категориями</h3>
+                    <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px;">Категория «Другое» защищена от удаления. Остальные можно редактировать и удалять.</p>
+                    <div id="categoriesList"></div>
+                    <button class="add-cat-btn" id="addCategoryBtn">+ Добавить категорию</button>
+                </div>
+            </section>
+
+            <!-- STATS -->
+            <section class="tab-content" id="tab-stats">
+                <div class="stats-filters" id="statsFilters">
+                    <button data-period="today">Сегодня</button>
+                    <button data-period="week" class="active">Неделя</button>
+                    <button data-period="month">Месяц</button>
+                    <button data-period="all">Всё время</button>
+                </div>
+                <div class="stats-grid" id="statsNumbers"></div>
+                <div class="chart-wrapper"><div class="chart-title">Активность (добавления за 7 дней)</div><canvas id="activityChart" height="150"></canvas></div>
+                <div class="chart-wrapper"><div class="chart-title">Распределение по категориям</div><canvas id="categoryPie" height="160"></canvas></div>
+                <div class="chart-wrapper"><div class="chart-title">Просмотренные vs непросмотренные по категориям</div><canvas id="categoryBar" height="150"></canvas></div>
+                <h4 style="margin-top:20px;font-weight:600;">История действий</h4>
+                <div style="overflow-x:auto;">
+                    <table class="history-table"><thead><tr><th>Дата</th><th>Действие</th><th>Элемент</th><th>XP</th><th>🪙</th></tr></thead><tbody id="historyBody"></tbody></table>
+                </div>
+            </section>
+
+            <!-- PROFILE -->
+            <section class="tab-content" id="tab-profile">
+                <div class="profile-section">
+                    <h3>👤 Профиль</h3>
+                    <label>Имя</label>
+                    <input type="text" id="profileName" value="Ученик">
+                    <label>Аватар</label>
+                    <div class="avatar-grid" id="avatarGrid"></div>
+                    <label>Тема оформления</label>
+                    <select id="themeSelect">
+                        <option value="light">Светлая</option>
+                        <option value="dark">Тёмная</option>
+                        <option value="purple">Фиолетовая</option>
+                        <option value="green">Зелёная</option>
+                        <option value="blue">Синяя</option>
+                    </select>
+                </div>
+                <div class="profile-section">
+                    <h3>⚙️ Настройки наград</h3>
+                    <div class="settings-row"><label>XP за просмотр</label><input type="number" id="setXpComplete" value="5"></div>
+                    <div class="settings-row"><label>Монет за просмотр</label><input type="number" id="setCoinComplete" value="3"></div>
+                    <div class="settings-row"><label>Ежедневный бонус XP</label><input type="number" id="setDailyXp" value="5"></div>
+                    <div class="settings-row"><label>Ежедневный бонус монет</label><input type="number" id="setDailyCoins" value="2"></div>
+                    <button class="btn-primary" id="saveSettingsBtn">Сохранить настройки</button>
+                </div>
+                <div class="profile-section">
+                    <h3>📁 Данные</h3>
+                    <button class="btn-primary" id="exportDataBtn">Экспорт JSON</button>
+                    <button class="btn-primary" id="importDataBtn" style="margin-left:8px;">Импорт JSON</button>
+                    <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                    <button class="btn-danger" id="resetDataBtn" style="margin-left:8px;">Сбросить всё</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  ПОЛНАЯ ЛОГИКА МОДУЛЯ "ЧЕКЛИСТ" (исправленная)
+        // ============================================================
+        (function() {
+            'use strict';
+
+            const STORE_PREFIX = 'check_';
+
+            // Начальные категории — только "Другое" системное
+            const defaultCategories = [
+                { id: 'cat1', name: 'Фильм', system: false },
+                { id: 'cat2', name: 'Книга', system: false },
+                { id: 'cat3', name: 'Сериал', system: false },
+                { id: 'cat4', name: 'Другое', system: true }
+            ];
+
+            const defaultItems = [
+                { id: 'i1', title: 'Начало', category: 'Фильм', done: false, rating: 0, comment: '', added: new Date(Date.now() - 86400000 * 2).toISOString(), completed: null },
+                { id: 'i2', title: 'Мастер и Маргарита', category: 'Книга', done: true, rating: 5, comment: 'Классика', added: new Date(Date.now() - 86400000 * 1).toISOString(), completed: new Date(Date.now() - 3600000 * 12).toISOString() },
+                { id: 'i3', title: 'Игра престолов', category: 'Сериал', done: true, rating: 4, comment: '', added: new Date(Date.now() - 3600000 * 6).toISOString(), completed: new Date(Date.now() - 3600000 * 4).toISOString() }
+            ];
+
+            function getStore(key, def) {
+                try { const v = localStorage.getItem(STORE_PREFIX + key); return v ? JSON.parse(v) : def; } catch { return def; }
+            }
+            function setStore(key, val) {
+                try { localStorage.setItem(STORE_PREFIX + key, JSON.stringify(val)); } catch (e) { showToast('Ошибка сохранения', 'error'); }
+            }
+
+            let items = getStore('items', defaultItems);
+            let categories = getStore('categories', defaultCategories);
+            let profile = getStore('profile', {
+                name: 'Ученик',
+                avatar: '📋',
+                theme: 'light',
+                level: 1,
+                xp: 0,
+                coins: 0,
+                dailyBonusDate: null,
+                dailyStreak: 0,
+                settings: {
+                    xpPerComplete: 5,
+                    coinPerComplete: 3,
+                    dailyBonusXp: 5,
+                    dailyBonusCoins: 2
+                }
+            });
+            let history = getStore('history', []);
+
+            function getAllCategoryNames() {
+                return categories.map(c => c.name);
+            }
+
+            // ----- XP / LEVEL -----
+            function calcLevel(xp) {
+                if (xp < 50) return 1;
+                let lvl = 1, need = 50;
+                while (xp >= need) { xp -= need; lvl++; need = 50 * lvl * lvl; }
+                return lvl;
+            }
+            function getXpForLevel(level) {
+                if (level <= 1) return 0;
+                let total = 0;
+                for (let i = 1; i < level; i++) total += 50 * i * i;
+                return total;
+            }
+            function getXpToNextLevel(level) { return 50 * level * level; }
+
+            function addXp(amount, showToastMsg = true) {
+                if (amount === 0) return;
+                let newXp = profile.xp + amount;
+                if (newXp < 0) newXp = 0;
+                profile.xp = newXp;
+                let oldLevel = profile.level;
+                let newLevel = calcLevel(profile.xp);
+                if (newLevel > oldLevel) {
+                    for (let lv = oldLevel + 1; lv <= newLevel; lv++) {
+                        profile.coins += 10;
+                        showToast(`🎉 Уровень ${lv} достигнут! +10 монет`, 'success');
+                    }
+                    profile.level = newLevel;
+                }
+                profile.coins = Math.max(0, profile.coins);
+                saveProfile();
+                updateUI();
+            }
+
+            function addCoins(amount) {
+                if (amount === 0) return;
+                profile.coins = Math.max(0, profile.coins + amount);
+                saveProfile();
+                updateUI();
+            }
+
+            function saveProfile() {
+                setStore('profile', profile);
+                setStore('items', items);
+                setStore('categories', categories);
+                setStore('history', history);
+            }
+
+            // ----- TOAST -----
+            function showToast(text, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast toast-' + type;
+                toast.textContent = text;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 2800);
+            }
+
+            // ----- MODAL -----
+            function openModal(html) {
+                const overlay = document.getElementById('modalOverlay');
+                document.getElementById('modalContent').innerHTML = html;
+                overlay.classList.remove('hidden');
+                const cancelBtn = document.querySelector('#modalContent .btn-secondary');
+                if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+            }
+            function closeModal() {
+                document.getElementById('modalOverlay').classList.add('hidden');
+            }
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // ----- LOG HISTORY -----
+            function logAction(action, itemTitle, xp = 0, coins = 0) {
+                history.unshift({
+                    date: new Date().toISOString(),
+                    action: action,
+                    item: itemTitle,
+                    xp: xp,
+                    coins: coins
+                });
+                if (history.length > 365) history = history.slice(0, 365);
+                setStore('history', history);
+            }
+
+            // ----- UI UPDATE -----
+            function updateUI() {
+                // header + sidebar
+                document.getElementById('headerAvatar').textContent = profile.avatar;
+                document.getElementById('headerName').textContent = profile.name;
+                document.getElementById('headerLevel').textContent = profile.level;
+                document.getElementById('headerCoins').textContent = profile.coins;
+                document.getElementById('headerXp').textContent = profile.xp;
+                document.getElementById('sidebarAvatar').textContent = profile.avatar;
+                document.getElementById('sidebarName').textContent = profile.name;
+
+                // XP Bar
+                const xpToNext = getXpToNextLevel(profile.level);
+                const xpInLevel = profile.xp - getXpForLevel(profile.level);
+                const pct = Math.min(100, (xpInLevel / xpToNext) * 100);
+                document.getElementById('xpBar').style.width = pct + '%';
+                document.getElementById('xpLabel').textContent = `${xpInLevel}/${xpToNext}`;
+
+                // dashboard widgets
+                const total = items.length;
+                const done = items.filter(i => i.done).length;
+                const pctDone = total ? Math.round(done / total * 100) : 0;
+                document.getElementById('totalItems').textContent = total;
+                document.getElementById('doneItems').textContent = done;
+                document.getElementById('pctDone').textContent = pctDone + '%';
+                let totalXp = 0;
+                history.forEach(h => totalXp += h.xp || 0);
+                document.getElementById('totalXpEarned').textContent = totalXp;
+
+                const streak = profile.dailyStreak || 0;
+                document.getElementById('streakInfo').textContent = `(серия: ${streak})`;
+                const lastDate = profile.dailyBonusDate;
+                const today = new Date().toDateString();
+                const btn = document.getElementById('dailyBonusBtn');
+                if (lastDate === today) {
+                    btn.disabled = true;
+                    btn.textContent = '✅ Получено сегодня';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = '🎁 Забрать бонус';
+                }
+
+                renderCategoryProgress();
+                renderRecentItems();
+                populateCategoryFilters();
+                renderItemsTable();
+                renderCategoriesList();
+                renderStats();
+                renderAvatarGrid();
+                document.getElementById('profileName').value = profile.name;
+                document.getElementById('themeSelect').value = profile.theme;
+                document.getElementById('setXpComplete').value = profile.settings.xpPerComplete;
+                document.getElementById('setCoinComplete').value = profile.settings.coinPerComplete;
+                document.getElementById('setDailyXp').value = profile.settings.dailyBonusXp;
+                document.getElementById('setDailyCoins').value = profile.settings.dailyBonusCoins;
+
+                applyTheme(profile.theme);
+            }
+
+            function applyTheme(theme) {
+                document.body.classList.remove('theme-light', 'theme-dark', 'theme-purple', 'theme-green', 'theme-blue');
+                if (theme === 'light') document.body.classList.add('theme-light');
+                else if (theme === 'dark') document.body.classList.add('theme-dark');
+                else if (theme === 'purple') document.body.classList.add('theme-purple');
+                else if (theme === 'green') document.body.classList.add('theme-green');
+                else if (theme === 'blue') document.body.classList.add('theme-blue');
+                else document.body.classList.add('theme-light');
+                profile.theme = theme;
+                saveProfile();
+            }
+
+            // ----- CATEGORY PROGRESS -----
+            function renderCategoryProgress() {
+                const container = document.getElementById('categoryProgressList');
+                const catNames = getAllCategoryNames();
+                let html = '';
+                catNames.forEach(cat => {
+                    const arr = items.filter(i => i.category === cat);
+                    const total = arr.length;
+                    const done = arr.filter(i => i.done).length;
+                    const pct = total ? Math.round(done / total * 100) : 0;
+                    html += `<div class="category-row" data-category="${cat}">
+                                <span>${cat}</span>
+                                <span class="cat-bar"><span class="cat-fill" style="width:${pct}%"></span></span>
+                                <span>${done}/${total}</span>
+                            </div>`;
+                });
+                container.innerHTML = html;
+                container.querySelectorAll('.category-row').forEach(row => {
+                    row.addEventListener('click', function() {
+                        document.getElementById('categoryFilter').value = this.dataset.category;
+                        switchTab('library');
+                        renderItemsTable();
+                    });
+                });
+            }
+
+            function renderRecentItems() {
+                const container = document.getElementById('recentItemsList');
+                const sorted = [...items].sort((a, b) => new Date(b.added) - new Date(a.added));
+                const recent = sorted.slice(0, 5);
+                if (!recent.length) { container.innerHTML = '<div class="empty-msg">Нет элементов</div>'; return; }
+                container.innerHTML = recent.map(i =>
+                    `<div class="recent-item">${i.title} <span class="tag">${i.category}</span> ${i.done ? '✅' : '⏳'}</div>`
+                ).join('');
+            }
+
+            // ----- LIBRARY TABLE -----
+            function populateCategoryFilters() {
+                const catNames = getAllCategoryNames();
+                const select = document.getElementById('categoryFilter');
+                const current = select.value;
+                select.innerHTML = catNames.map(c => `<option value="${c}">${c}</option>`).join('');
+                select.innerHTML = '<option value="all">Все категории</option>' + select.innerHTML;
+                select.value = current;
+            }
+
+            function renderItemsTable() {
+                const search = document.getElementById('searchInput').value.toLowerCase();
+                const cat = document.getElementById('categoryFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const rating = document.getElementById('ratingFilter').value;
+                const sort = document.getElementById('sortSelect').value;
+
+                let filtered = items.filter(i => {
+                    const matchSearch = i.title.toLowerCase().includes(search) || i.comment.toLowerCase().includes(search);
+                    const matchCat = cat === 'all' || i.category === cat;
+                    const matchStatus = status === 'all' || (status === 'done' && i.done) || (status === 'pending' && !i.done);
+                    const matchRating = rating === 'all' || i.rating == rating;
+                    return matchSearch && matchCat && matchStatus && matchRating;
+                });
+
+                if (sort === 'az') filtered.sort((a, b) => a.title.localeCompare(b.title));
+                else if (sort === 'rating') filtered.sort((a, b) => b.rating - a.rating);
+                else filtered.sort((a, b) => new Date(b.added) - new Date(a.added));
+
+                const tbody = document.getElementById('itemsTableBody');
+                if (!filtered.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-msg">Ничего не найдено</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = filtered.map(i => {
+                    const stars = '⭐'.repeat(i.rating) + '☆'.repeat(5 - i.rating);
+                    const statusText = i.done ? '<span class="status-badge done">✅ Просмотрено</span>' :
+                        '<span class="status-badge pending">⏳ Не просмотрено</span>';
+                    const dateStr = new Date(i.added).toLocaleDateString();
+                    return `<tr>
+                                <td><strong>${i.title}</strong></td>
+                                <td><span class="tag">${i.category}</span></td>
+                                <td>${statusText}</td>
+                                <td><span class="stars">${stars}</span></td>
+                                <td>${dateStr}</td>
+                                <td>
+                                    <div class="item-actions">
+                                        <button class="edit-item" data-id="${i.id}">✏️</button>
+                                        <button class="delete-item" data-id="${i.id}">🗑️</button>
+                                        <button class="toggle-done" data-id="${i.id}">${i.done ? '↩️' : '✅'}</button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                }).join('');
+
+                tbody.querySelectorAll('.edit-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const item = items.find(i => i.id === id);
+                        if (item) showEditItemModal(item);
+                    });
+                });
+                tbody.querySelectorAll('.delete-item').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        confirmDeleteItem(id);
+                    });
+                });
+                tbody.querySelectorAll('.toggle-done').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        toggleDone(id);
+                    });
+                });
+            }
+
+            // ----- ADD / EDIT / DELETE / TOGGLE -----
+            function showAddItemModal() {
+                const catNames = getAllCategoryNames();
+                const html = `
+                            <h3>➕ Добавить элемент</h3>
+                            <div class="field"><label>Название *</label><input id="modalTitle" placeholder="Напр. Дюна"></div>
+                            <div class="field"><label>Категория</label>
+                                <select id="modalCategory">
+                                    ${catNames.map(c => `<option value="${c}">${c}</option>`).join('')}
+                                    <option value="__new">➕ Новая категория</option>
+                                </select>
+                            </div>
+                            <div class="field" id="newCatField" style="display:none;"><label>Новая категория</label><input id="modalNewCat" placeholder="Название"></div>
+                            <div class="field"><label>Оценка (1–5)</label><input type="number" id="modalRating" min="0" max="5" value="0"></div>
+                            <div class="field"><label>Комментарий</label><textarea id="modalComment" placeholder="Ваши впечатления..."></textarea></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveItem">Сохранить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalCategory').addEventListener('change', function() {
+                    document.getElementById('newCatField').style.display = this.value === '__new' ? 'block' : 'none';
+                });
+                document.getElementById('modalSaveItem').addEventListener('click', function() {
+                    const title = document.getElementById('modalTitle').value.trim();
+                    if (!title) { showToast('Введите название', 'error'); return; }
+                    let cat = document.getElementById('modalCategory').value;
+                    if (cat === '__new') cat = document.getElementById('modalNewCat').value.trim() || 'Другое';
+                    if (!categories.find(c => c.name === cat)) {
+                        categories.push({ id: 'cat' + Date.now(), name: cat, system: false });
+                        setStore('categories', categories);
+                    }
+                    const rating = parseInt(document.getElementById('modalRating').value) || 0;
+                    const comment = document.getElementById('modalComment').value.trim();
+                    const newItem = {
+                        id: 'i' + Date.now() + Math.random().toString(36).slice(2, 6),
+                        title: title,
+                        category: cat,
+                        done: false,
+                        rating: rating,
+                        comment: comment,
+                        added: new Date().toISOString(),
+                        completed: null
+                    };
+                    items.push(newItem);
+                    logAction('add', title, 0, 0);
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast(`Элемент "${title}" добавлен`, 'success');
+                });
+            }
+
+            function showEditItemModal(item) {
+                const catNames = getAllCategoryNames();
+                const html = `
+                            <h3>✏️ Редактировать</h3>
+                            <div class="field"><label>Название *</label><input id="modalTitle" value="${item.title}"></div>
+                            <div class="field"><label>Категория</label>
+                                <select id="modalCategory">
+                                    ${catNames.map(c => `<option value="${c}" ${c===item.category?'selected':''}>${c}</option>`).join('')}
+                                    <option value="__new">➕ Новая категория</option>
+                                </select>
+                            </div>
+                            <div class="field" id="newCatField" style="display:none;"><label>Новая категория</label><input id="modalNewCat"></div>
+                            <div class="field"><label>Оценка (1–5)</label><input type="number" id="modalRating" min="0" max="5" value="${item.rating}"></div>
+                            <div class="field"><label>Комментарий</label><textarea id="modalComment">${item.comment}</textarea></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveItem">Сохранить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalCategory').addEventListener('change', function() {
+                    document.getElementById('newCatField').style.display = this.value === '__new' ? 'block' : 'none';
+                });
+                document.getElementById('modalSaveItem').addEventListener('click', function() {
+                    const title = document.getElementById('modalTitle').value.trim();
+                    if (!title) { showToast('Введите название', 'error'); return; }
+                    let cat = document.getElementById('modalCategory').value;
+                    if (cat === '__new') cat = document.getElementById('modalNewCat').value.trim() || 'Другое';
+                    if (!categories.find(c => c.name === cat)) {
+                        categories.push({ id: 'cat' + Date.now(), name: cat, system: false });
+                        setStore('categories', categories);
+                    }
+                    const rating = parseInt(document.getElementById('modalRating').value) || 0;
+                    const comment = document.getElementById('modalComment').value.trim();
+                    item.title = title;
+                    item.category = cat;
+                    item.rating = rating;
+                    item.comment = comment;
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Элемент обновлён', 'success');
+                });
+            }
+
+            function confirmDeleteItem(id) {
+                const item = items.find(i => i.id === id);
+                if (!item) return;
+                const html = `
+                            <h3>🗑️ Удалить элемент?</h3>
+                            <p>Вы уверены, что хотите удалить "<strong>${item.title}</strong>"?</p>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-danger" id="confirmDelete">Удалить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('confirmDelete').addEventListener('click', function() {
+                    if (item.done) {
+                        const coinBack = profile.settings.coinPerComplete || 3;
+                        const xpBack = profile.settings.xpPerComplete || 5;
+                        if (profile.coins < coinBack) {
+                            showToast(`Недостаточно монет для отката (нужно ${coinBack} 🪙)`, 'error');
+                            return;
+                        }
+                        addCoins(-coinBack);
+                        addXp(-xpBack, false);
+                        logAction('delete', item.title, -xpBack, -coinBack);
+                    } else {
+                        logAction('delete', item.title, 0, 0);
+                    }
+                    items = items.filter(i => i.id !== id);
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Элемент удалён', 'info');
+                });
+            }
+
+            function toggleDone(id) {
+                const item = items.find(i => i.id === id);
+                if (!item) return;
+                const was = item.done;
+                if (was) {
+                    const coinBack = profile.settings.coinPerComplete || 3;
+                    const xpBack = profile.settings.xpPerComplete || 5;
+                    if (profile.coins < coinBack) {
+                        showToast(`Недостаточно монет для отката (нужно ${coinBack} 🪙)`, 'error');
+                        return;
+                    }
+                    item.done = false;
+                    item.completed = null;
+                    addCoins(-coinBack);
+                    addXp(-xpBack, false);
+                    logAction('uncomplete', item.title, -xpBack, -coinBack);
+                    showToast(`Откат: -${coinBack} 🪙, -${xpBack} XP`, 'info');
+                } else {
+                    item.done = true;
+                    item.completed = new Date().toISOString();
+                    const xpGain = profile.settings.xpPerComplete || 5;
+                    const coinGain = profile.settings.coinPerComplete || 3;
+                    addXp(xpGain);
+                    addCoins(coinGain);
+                    logAction('complete', item.title, xpGain, coinGain);
+                    showToast(`✅ Просмотрено! +${xpGain} XP, +${coinGain} 🪙`, 'success');
+                }
+                saveProfile();
+                updateUI();
+            }
+
+            // ----- CATEGORIES MANAGEMENT (без замков, кроме "Другое") -----
+            function renderCategoriesList() {
+                const container = document.getElementById('categoriesList');
+                container.innerHTML = categories.map(c => `
+                            <div class="cat-row" data-id="${c.id}">
+                                <span>${c.name} ${c.system ? '🔒' : ''}</span>
+                                <div class="cat-actions">
+                                    ${!c.system ? `<button class="edit-cat" data-id="${c.id}">✏️</button>
+                                    <button class="delete-cat" data-id="${c.id}">🗑️</button>` : ''}
+                                </div>
+                            </div>
+                        `).join('');
+                container.querySelectorAll('.edit-cat').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        const cat = categories.find(c => c.id === id);
+                        if (cat) showEditCategoryModal(cat);
+                    });
+                });
+                container.querySelectorAll('.delete-cat').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        confirmDeleteCategory(id);
+                    });
+                });
+            }
+
+            function showEditCategoryModal(cat) {
+                const html = `
+                            <h3>✏️ Редактировать категорию</h3>
+                            <div class="field"><label>Название</label><input id="modalCatName" value="${cat.name}"></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveCat">Сохранить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalSaveCat').addEventListener('click', function() {
+                    const newName = document.getElementById('modalCatName').value.trim();
+                    if (!newName) { showToast('Введите название', 'error'); return; }
+                    if (categories.some(c => c.name === newName && c.id !== cat.id)) {
+                        showToast('Такая категория уже есть', 'error');
+                        return;
+                    }
+                    items.forEach(i => { if (i.category === cat.name) i.category = newName; });
+                    cat.name = newName;
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Категория обновлена', 'success');
+                });
+            }
+
+            function confirmDeleteCategory(id) {
+                const cat = categories.find(c => c.id === id);
+                if (!cat || cat.system) { showToast('Системную категорию нельзя удалить', 'error'); return; }
+                const count = items.filter(i => i.category === cat.name).length;
+                const html = `
+                            <h3>🗑️ Удалить категорию?</h3>
+                            <p>Категория "${cat.name}" содержит ${count} элементов. Они будут перенесены в "Другое".</p>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-danger" id="confirmDelete">Удалить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('confirmDelete').addEventListener('click', function() {
+                    items.forEach(i => { if (i.category === cat.name) i.category = 'Другое'; });
+                    categories = categories.filter(c => c.id !== id);
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Категория удалена, элементы перенесены в "Другое"', 'info');
+                });
+            }
+
+            document.getElementById('addCategoryBtn').addEventListener('click', function() {
+                const html = `
+                            <h3>➕ Новая категория</h3>
+                            <div class="field"><label>Название</label><input id="modalNewCatName" placeholder="Напр. Подкаст"></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveNewCat">Создать</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalSaveNewCat').addEventListener('click', function() {
+                    const name = document.getElementById('modalNewCatName').value.trim();
+                    if (!name) { showToast('Введите название', 'error'); return; }
+                    if (categories.some(c => c.name === name)) {
+                        showToast('Такая категория уже есть', 'error');
+                        return;
+                    }
+                    categories.push({ id: 'cat' + Date.now(), name: name, system: false });
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Категория добавлена', 'success');
+                });
+            });
+
+            // ----- STATS (улучшенные графики) -----
+            let statsPeriod = 'week';
+
+            function renderStats() {
+                const period = statsPeriod;
+                let filtered = items;
+                const now = new Date();
+                if (period === 'today') {
+                    const todayStr = now.toDateString();
+                    filtered = items.filter(i => new Date(i.added).toDateString() === todayStr);
+                } else if (period === 'week') {
+                    const start = new Date(now);
+                    start.setDate(now.getDate() - now.getDay() + 1);
+                    start.setHours(0,0,0,0);
+                    filtered = items.filter(i => new Date(i.added) >= start);
+                } else if (period === 'month') {
+                    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                    filtered = items.filter(i => new Date(i.added) >= start);
+                }
+                const total = filtered.length;
+                const done = filtered.filter(i => i.done).length;
+                const pct = total ? Math.round(done / total * 100) : 0;
+                let xpPeriod = 0, coinsPeriod = 0;
+                history.forEach(h => {
+                    const hDate = new Date(h.date);
+                    if (period === 'today' && hDate.toDateString() === now.toDateString()) {
+                        xpPeriod += h.xp || 0; coinsPeriod += h.coins || 0;
+                    } else if (period === 'week' && hDate >= new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 1)) {
+                        xpPeriod += h.xp || 0; coinsPeriod += h.coins || 0;
+                    } else if (period === 'month' && hDate >= new Date(now.getFullYear(), now.getMonth(), 1)) {
+                        xpPeriod += h.xp || 0; coinsPeriod += h.coins || 0;
+                    } else if (period === 'all') {
+                        xpPeriod += h.xp || 0; coinsPeriod += h.coins || 0;
+                    }
+                });
+
+                document.getElementById('statsNumbers').innerHTML = `
+                            <div class="stat-item"><div class="num">${total}</div><div class="label">Добавлено</div></div>
+                            <div class="stat-item"><div class="num">${done}</div><div class="label">Просмотрено</div></div>
+                            <div class="stat-item"><div class="num">${pct}%</div><div class="label">Процент</div></div>
+                            <div class="stat-item"><div class="num">${xpPeriod}</div><div class="label">XP</div></div>
+                            <div class="stat-item"><div class="num">${coinsPeriod}</div><div class="label">🪙</div></div>
+                        `;
+
+                drawActivityChart(filtered);
+                drawCategoryPie();
+                drawCategoryBar();
+
+                const tbody = document.getElementById('historyBody');
+                if (!history.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">Нет данных</td></tr>';
+                } else {
+                    const sorted = history.slice(0, 50);
+                    tbody.innerHTML = sorted.map(h => `
+                                <tr><td>${new Date(h.date).toLocaleDateString()}</td><td>${h.action}</td><td>${h.item}</td><td>${h.xp || 0}</td><td>${h.coins || 0}</td></tr>
+                            `).join('');
+                }
+            }
+
+            function drawActivityChart(filtered) {
+                const canvas = document.getElementById('activityChart');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width = canvas.parentElement.clientWidth || 300;
+                const H = canvas.height = 150;
+                ctx.clearRect(0, 0, W, H);
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const key = d.toDateString();
+                    const count = filtered.filter(item => new Date(item.added).toDateString() === key).length;
+                    days.push({ date: d, count });
+                }
+                const max = Math.max(1, ...days.map(d => d.count));
+                const pad = { top: 15, bottom: 25, left: 30, right: 10 };
+                const chartW = W - pad.left - pad.right;
+                const chartH = H - pad.top - pad.bottom;
+                const step = chartW / 6;
+                // сетка
+                ctx.strokeStyle = 'var(--border-color)';
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i <= 4; i++) {
+                    const y = pad.top + chartH - (i / 4) * chartH;
+                    ctx.beginPath();
+                    ctx.moveTo(pad.left, y);
+                    ctx.lineTo(W - pad.right, y);
+                    ctx.stroke();
+                }
+                ctx.fillStyle = 'var(--text-secondary)';
+                ctx.font = '9px sans-serif';
+                days.forEach((d, i) => {
+                    const x = pad.left + i * step;
+                    const h = (d.count / max) * chartH;
+                    const y = pad.top + chartH - h;
+                    ctx.fillStyle = 'var(--accent)';
+                    ctx.fillRect(x + 2, y, step * 0.6 - 4, h);
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(d.date.getDate() + '/' + (d.date.getMonth() + 1), x + step * 0.3, pad.top + chartH + 16);
+                    ctx.fillStyle = 'var(--text-primary)';
+                    ctx.fillText(d.count, x + step * 0.3, y - 4);
+                });
+                if (days.every(d => d.count === 0)) {
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Нет данных', W/2, H/2);
+                }
+            }
+
+            function drawCategoryPie() {
+                const canvas = document.getElementById('categoryPie');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width = canvas.parentElement.clientWidth || 300;
+                const H = canvas.height = 160;
+                ctx.clearRect(0, 0, W, H);
+                const catMap = {};
+                items.forEach(i => { catMap[i.category] = (catMap[i.category] || 0) + 1; });
+                const total = Object.values(catMap).reduce((a,b) => a+b, 0);
+                if (!total) {
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Нет данных', W/2, H/2);
+                    return;
+                }
+                const colors = ['#1abc9c', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6', '#3498db', '#e67e22', '#1dd1a1'];
+                const cx = W/2, cy = H/2 - 5, r = Math.min(W,H)/2 - 30;
+                let start = -Math.PI/2;
+                const keys = Object.keys(catMap);
+                keys.forEach((k,i) => {
+                    const val = catMap[k];
+                    const angle = (val/total) * 2 * Math.PI;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, r, start, start + angle);
+                    ctx.closePath();
+                    ctx.fillStyle = colors[i % colors.length];
+                    ctx.fill();
+                    ctx.strokeStyle = 'var(--bg-body)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    const mid = start + angle/2;
+                    const xText = cx + Math.cos(mid)*(r+16);
+                    const yText = cy + Math.sin(mid)*(r+16);
+                    ctx.beginPath();
+                    ctx.moveTo(cx + Math.cos(mid)*r, cy + Math.sin(mid)*r);
+                    ctx.lineTo(cx + Math.cos(mid)*(r+10), cy + Math.sin(mid)*(r+10));
+                    ctx.strokeStyle = 'var(--text-muted)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.fillStyle = 'var(--text-primary)';
+                    ctx.font = '9px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(`${k} ${Math.round(val/total*100)}%`, xText, yText);
+                    start += angle;
+                });
+            }
+
+            function drawCategoryBar() {
+                const canvas = document.getElementById('categoryBar');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width = canvas.parentElement.clientWidth || 300;
+                const H = canvas.height = 150;
+                ctx.clearRect(0, 0, W, H);
+                const catMap = {};
+                items.forEach(i => {
+                    if (!catMap[i.category]) catMap[i.category] = { done: 0, total: 0 };
+                    catMap[i.category].total++;
+                    if (i.done) catMap[i.category].done++;
+                });
+                const keys = Object.keys(catMap);
+                if (!keys.length) {
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.font = '12px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('Нет данных', W/2, H/2);
+                    return;
+                }
+                const pad = { top: 10, bottom: 25, left: 30, right: 10 };
+                const chartW = W - pad.left - pad.right;
+                const chartH = H - pad.top - pad.bottom;
+                const step = chartW / keys.length;
+                const maxTotal = Math.max(1, ...keys.map(k => catMap[k].total));
+                ctx.fillStyle = 'var(--text-secondary)';
+                ctx.font = '8px sans-serif';
+                keys.forEach((k, i) => {
+                    const x = pad.left + i * step;
+                    const totalH = (catMap[k].total / maxTotal) * chartH;
+                    const doneH = (catMap[k].done / maxTotal) * chartH;
+                    // фон
+                    ctx.fillStyle = 'var(--border-color)';
+                    ctx.fillRect(x + 2, pad.top + chartH - totalH, step * 0.4 - 4, totalH);
+                    // выполненные
+                    ctx.fillStyle = 'var(--accent)';
+                    ctx.fillRect(x + 2, pad.top + chartH - doneH, step * 0.4 - 4, doneH);
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(k, x + step * 0.2, pad.top + chartH + 16);
+                    ctx.fillStyle = 'var(--text-primary)';
+                    ctx.fillText(catMap[k].done + '/' + catMap[k].total, x + step * 0.2, pad.top + chartH - totalH - 4);
+                });
+            }
+
+            // ----- PROFILE AVATARS -----
+            function renderAvatarGrid() {
+                const grid = document.getElementById('avatarGrid');
+                const avatars = ['📋', '😎', '😊', '🐱', '🐶', '🦊', '🐼', '🐨', '🦁', '🐧', '🐦', '🐤', '🐣', '🐥', '🦄', '🐴', '🐞',
+                    '🐝', '🌸', '🌺', '🌻', '🌷', '🍕', '🍔', '🌮', '🍣', '🎮', '🎯', '💪', '🧠', '🖥️', '📱', '💻', '🔐', '⚡'
+                ];
+                const current = profile.avatar;
+                grid.innerHTML = avatars.map(a =>
+                    `<button class="${a===current?'active':''}" data-avatar="${a}">${a}</button>`
+                ).join('');
+                grid.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        profile.avatar = this.dataset.avatar;
+                        saveProfile();
+                        renderAvatarGrid();
+                        updateUI();
+                        showToast('Аватар обновлён', 'info');
+                    });
+                });
+            }
+
+            // ----- DAILY BONUS -----
+            document.getElementById('dailyBonusBtn').addEventListener('click', function() {
+                const today = new Date().toDateString();
+                if (profile.dailyBonusDate === today) {
+                    showToast('Вы уже забирали бонус сегодня', 'info');
+                    return;
+                }
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yestStr = yesterday.toDateString();
+                if (profile.dailyBonusDate === yestStr) {
+                    profile.dailyStreak = (profile.dailyStreak || 0) + 1;
+                } else {
+                    profile.dailyStreak = 1;
+                }
+                profile.dailyBonusDate = today;
+                addXp(profile.settings.dailyBonusXp || 5);
+                addCoins(profile.settings.dailyBonusCoins || 2);
+                showToast(`Бонус получен! +${profile.settings.dailyBonusXp} XP, +${profile.settings.dailyBonusCoins} монет`, 'success');
+                saveProfile();
+                updateUI();
+            });
+
+            // ----- SETTINGS -----
+            document.getElementById('saveSettingsBtn').addEventListener('click', function() {
+                profile.settings.xpPerComplete = parseInt(document.getElementById('setXpComplete').value) || 5;
+                profile.settings.coinPerComplete = parseInt(document.getElementById('setCoinComplete').value) || 3;
+                profile.settings.dailyBonusXp = parseInt(document.getElementById('setDailyXp').value) || 5;
+                profile.settings.dailyBonusCoins = parseInt(document.getElementById('setDailyCoins').value) || 2;
+                saveProfile();
+                showToast('Настройки сохранены', 'success');
+            });
+
+            // ----- THEME -----
+            document.getElementById('themeSelect').addEventListener('change', function() {
+                const theme = this.value;
+                applyTheme(theme);
+                saveProfile();
+                updateUI();
+                showToast(`Тема изменена на ${theme}`, 'info');
+            });
+
+            // ----- NAME -----
+            document.getElementById('profileName').addEventListener('change', function() {
+                profile.name = this.value.trim() || 'Ученик';
+                saveProfile();
+                updateUI();
+            });
+
+            // ----- EXPORT / IMPORT / RESET -----
+            document.getElementById('exportDataBtn').addEventListener('click', function() {
+                const data = { items, categories, profile, history };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'checklist_data.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            document.getElementById('importDataBtn').addEventListener('click', function() {
+                document.getElementById('importFileInput').click();
+            });
+            document.getElementById('importFileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if (data.items && data.categories && data.profile) {
+                            if (confirm('Импорт заменит все текущие данные. Продолжить?')) {
+                                items = data.items;
+                                categories = data.categories;
+                                profile = data.profile;
+                                history = data.history || [];
+                                saveProfile();
+                                updateUI();
+                                showToast('Данные импортированы', 'success');
+                            }
+                        } else { showToast('Неверный формат файла', 'error'); }
+                    } catch (err) { showToast('Ошибка чтения файла', 'error'); }
+                };
+                reader.readAsText(file);
+                this.value = '';
+            });
+
+            document.getElementById('resetDataBtn').addEventListener('click', function() {
+                if (confirm('ВСЕ ДАННЫЕ БУДУТ УДАЛЕНЫ. Продолжить?')) {
+                    items = defaultItems.map(i => ({ ...i, added: new Date().toISOString(), completed: i.done ? new Date().toISOString() : null }));
+                    categories = defaultCategories.map(c => ({ ...c }));
+                    profile = {
+                        name: 'Ученик',
+                        avatar: '📋',
+                        theme: 'light',
+                        level: 1,
+                        xp: 0,
+                        coins: 0,
+                        dailyBonusDate: null,
+                        dailyStreak: 0,
+                        settings: {
+                            xpPerComplete: 5,
+                            coinPerComplete: 3,
+                            dailyBonusXp: 5,
+                            dailyBonusCoins: 2
+                        }
+                    };
+                    history = [];
+                    saveProfile();
+                    updateUI();
+                    showToast('Все данные сброшены', 'info');
+                }
+            });
+
+            // ----- NAVIGATION -----
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tabId).classList.add('active');
+                document.querySelectorAll('.sidebar nav button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
+                const titles = {
+                    dashboard: 'Дашборд',
+                    library: 'Библиотека',
+                    categories: 'Категории',
+                    stats: 'Статистика',
+                    profile: 'Профиль'
+                };
+                document.getElementById('pageTitle').textContent = titles[tabId] || tabId;
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+                if (tabId === 'stats') renderStats();
+                if (tabId === 'library') renderItemsTable();
+                if (tabId === 'categories') renderCategoriesList();
+                if (tabId === 'dashboard') updateUI();
+                if (tabId === 'profile') updateUI();
+            }
+
+            document.querySelectorAll('.sidebar nav button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+
+            document.getElementById('hamburgerBtn').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('open');
+                document.getElementById('sidebarOverlay').classList.toggle('show');
+            });
+            document.getElementById('sidebarOverlay').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.remove('open');
+                this.classList.remove('show');
+            });
+
+            // ----- ADD ITEM -----
+            document.getElementById('addItemBtn').addEventListener('click', showAddItemModal);
+
+            // ----- FILTERS -----
+            document.querySelectorAll('#searchInput, #categoryFilter, #statusFilter, #ratingFilter, #sortSelect')
+                .forEach(el => {
+                    el.addEventListener('input', renderItemsTable);
+                    el.addEventListener('change', renderItemsTable);
+                });
+
+            // ----- STATS FILTERS -----
+            document.querySelectorAll('#statsFilters button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#statsFilters button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    statsPeriod = this.dataset.period;
+                    renderStats();
+                });
+            });
+
+            // ----- INIT -----
+            if (!localStorage.getItem(STORE_PREFIX + 'items')) {
+                setStore('items', defaultItems);
+                setStore('categories', defaultCategories);
+                setStore('profile', profile);
+                setStore('history', []);
+            }
+            items = getStore('items', defaultItems);
+            categories = getStore('categories', defaultCategories);
+            profile = getStore('profile', {
+                name: 'Ученик',
+                avatar: '📋',
+                theme: 'light',
+                level: 1,
+                xp: 0,
+                coins: 0,
+                dailyBonusDate: null,
+                dailyStreak: 0,
+                settings: {
+                    xpPerComplete: 5,
+                    coinPerComplete: 3,
+                    dailyBonusXp: 5,
+                    dailyBonusCoins: 2
+                }
+            });
+            history = getStore('history', []);
+            profile.level = calcLevel(profile.xp);
+            saveProfile();
+            applyTheme(profile.theme);
+            updateUI();
+            switchTab('dashboard');
+        })();
+    </script>
+</body>
+</html>
