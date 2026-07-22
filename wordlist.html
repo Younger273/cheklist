@@ -1,0 +1,2018 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Словарь · CRM-тренажёр</title>
+    <style>
+        /* ===== ПЕРЕМЕННЫЕ ===== */
+        :root {
+            --bg-body: #f0f4f9;
+            --bg-sidebar: #1e2a3a;
+            --bg-header: #ffffff;
+            --bg-card: #ffffff;
+            --bg-modal: #ffffff;
+            --text-primary: #1a2332;
+            --text-secondary: #4a5a6e;
+            --text-muted: #8a9aa8;
+            --border-color: #dce3ec;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            --accent: #2a7de1;
+            --accent-hover: #1a5fb0;
+            --accent-light: #e2edfc;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --radius: 12px;
+            --transition: 0.25s ease;
+            --sidebar-width: 220px;
+        }
+
+        .theme-dark {
+            --bg-body: #12161e;
+            --bg-sidebar: #0f141c;
+            --bg-header: #1a202a;
+            --bg-card: #1e2632;
+            --bg-modal: #1e2632;
+            --text-primary: #e4eaf0;
+            --text-secondary: #a0b0c0;
+            --text-muted: #6a7a8a;
+            --border-color: #2a3344;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            --accent: #4a8af4;
+            --accent-hover: #3a7ae0;
+            --accent-light: #1a2a44;
+        }
+        .theme-purple {
+            --bg-body: #16101f;
+            --bg-sidebar: #0f0a18;
+            --bg-header: #1e152e;
+            --bg-card: #261d3a;
+            --bg-modal: #261d3a;
+            --text-primary: #efe8fc;
+            --text-secondary: #c4b5e0;
+            --text-muted: #8a7aaa;
+            --border-color: #3a2a50;
+            --accent: #a87cff;
+            --accent-hover: #8a5fd0;
+            --accent-light: #2a1a44;
+        }
+        .theme-green {
+            --bg-body: #0e1a12;
+            --bg-sidebar: #08120a;
+            --bg-header: #14261a;
+            --bg-card: #1a2e1e;
+            --bg-modal: #1a2e1e;
+            --text-primary: #ddf0e0;
+            --text-secondary: #98b89e;
+            --text-muted: #5a7a5e;
+            --border-color: #2a442e;
+            --accent: #5cb85c;
+            --accent-hover: #449a44;
+            --accent-light: #1a3a1e;
+        }
+        .theme-blue {
+            --bg-body: #0b182a;
+            --bg-sidebar: #06101c;
+            --bg-header: #102236;
+            --bg-card: #142b44;
+            --bg-modal: #142b44;
+            --text-primary: #dceaf6;
+            --text-secondary: #90b0cc;
+            --text-muted: #5a7a96;
+            --border-color: #1e405e;
+            --accent: #4ab7f0;
+            --accent-hover: #2a9ad0;
+            --accent-light: #1a3a5a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            display: flex;
+            min-height: 100vh;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--border-color);
+            transition: width 0.3s, background var(--transition);
+            overflow: hidden;
+            flex-shrink: 0;
+            z-index: 100;
+        }
+        .sidebar .logo {
+            padding: 20px 18px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .sidebar .logo span {
+            background: var(--accent);
+            padding: 2px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            color: #fff;
+        }
+        .sidebar nav {
+            flex: 1;
+            padding: 16px 0;
+        }
+        .sidebar nav button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all var(--transition);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        .sidebar nav button .icon {
+            font-size: 1.4rem;
+            width: 28px;
+            text-align: center;
+        }
+        .sidebar nav button:hover {
+            background: rgba(255,255,255,0.04);
+            color: var(--text-primary);
+        }
+        .sidebar nav button.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+        .sidebar .user-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sidebar .user-footer .avatar-small {
+            font-size: 1.6rem;
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: var(--bg-body);
+            transition: background var(--transition);
+        }
+
+        /* ===== HEADER ===== */
+        .top-header {
+            background: var(--bg-header);
+            padding: 12px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            transition: background var(--transition), border var(--transition);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .top-header .left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .top-header .left .hamburger {
+            display: none;
+            font-size: 1.6rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+        .top-header .left .page-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        .top-header .right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .top-header .right .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-body);
+            padding: 4px 14px 4px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+        }
+        .top-header .right .user-badge .avatar {
+            font-size: 1.6rem;
+        }
+        .top-header .right .user-badge .info {
+            line-height: 1.2;
+        }
+        .top-header .right .user-badge .info .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .top-header .right .user-badge .info .level {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        .top-header .right .coins-xp {
+            display: flex;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .top-header .right .coins-xp span {
+            background: var(--bg-body);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* ===== CONTENT ===== */
+        .content {
+            flex: 1;
+            padding: 24px 28px;
+            overflow-y: auto;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== DASHBOARD WIDGETS ===== */
+        .widget-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+        .widget {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            transition: background var(--transition), border var(--transition);
+        }
+        .widget .number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        .widget .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .widget .trend {
+            font-size: 0.7rem;
+            color: var(--success);
+        }
+        .daily-bonus-widget {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .daily-bonus-widget button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .daily-bonus-widget button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .daily-bonus-widget button:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+
+        .category-progress,
+        .recent-terms {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+        .category-progress .title,
+        .recent-terms .title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+        }
+        .category-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 6px 0;
+            cursor: pointer;
+            padding: 4px 0;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .category-row:hover {
+            background: var(--accent-light);
+        }
+        .category-row .cat-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .category-row .cat-fill {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.4s;
+        }
+        .recent-term-item {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        .recent-term-item:last-child { border-bottom: none; }
+        .tag {
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 2px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* ===== LIBRARY (таблица) ===== */
+        .library-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        .library-controls input,
+        .library-controls select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            flex: 1 1 140px;
+        }
+        .library-controls .add-btn {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .library-controls .add-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+        .table-wrap {
+            overflow-x: auto;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+        table.terms-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        table.terms-table th {
+            background: var(--bg-body);
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+        table.terms-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        table.terms-table tr:hover td {
+            background: var(--accent-light);
+        }
+        .term-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .term-actions button {
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            padding: 2px 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .term-actions button:hover {
+            background: var(--accent-light);
+        }
+        .learned-badge {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* ===== TEST ===== */
+        .test-setup {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 24px;
+        }
+        .test-setup .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .test-setup select {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+            flex: 1 1 130px;
+        }
+        .test-setup .start-btn {
+            background: var(--success);
+            color: #fff;
+            border: none;
+            padding: 10px 32px;
+            border-radius: 30px;
+            font-weight: 700;
+            transition: all var(--transition);
+        }
+        .test-setup .start-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(46,204,113,0.3);
+        }
+        .test-question {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 32px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .test-question .q-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .test-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .test-options button {
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .test-options button:hover:not(:disabled) {
+            border-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .test-options button.correct {
+            border-color: var(--success);
+            background: rgba(46,204,113,0.15);
+            color: var(--success);
+        }
+        .test-options button.wrong {
+            border-color: var(--danger);
+            background: rgba(231,76,60,0.15);
+            color: var(--danger);
+        }
+        .test-options button:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .test-result {
+            text-align: center;
+            padding: 30px;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+        }
+        .test-result h3 { font-size: 1.8rem; margin-bottom: 12px; }
+
+        /* ===== STATS ===== */
+        .stats-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .stats-filters button {
+            padding: 6px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: all var(--transition);
+        }
+        .stats-filters button.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stats-grid .stat-item {
+            background: var(--bg-card);
+            padding: 16px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .stats-grid .stat-item .num {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+        canvas {
+            max-width: 100%;
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            margin: 12px 0;
+            width: 100%;
+            border: 1px solid var(--border-color);
+        }
+        .history-table {
+            width: 100%;
+            font-size: 0.85rem;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .history-table th,
+        .history-table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        /* ===== PROFILE ===== */
+        .profile-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        .profile-section h3 {
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+        }
+        .profile-section label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .profile-section input,
+        .profile-section select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin: 10px 0 16px;
+        }
+        .avatar-grid button {
+            font-size: 2rem;
+            background: var(--bg-body);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 6px;
+            transition: all 0.2s;
+        }
+        .avatar-grid button.active {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: scale(1.05);
+        }
+        .settings-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            margin: 8px 0;
+        }
+        .settings-row label {
+            min-width: 140px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .settings-row input {
+            flex: 1;
+            max-width: 100px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: scale(1.02);
+        }
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all var(--transition);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.25s;
+        }
+        .modal-overlay.hidden { display: none; }
+        .modal-box {
+            background: var(--bg-modal);
+            border-radius: var(--radius);
+            max-width: 520px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        }
+        .modal-box h3 { margin-bottom: 18px; font-size: 1.3rem; }
+        .modal-box .field { margin-bottom: 16px; }
+        .modal-box label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        .modal-box input,
+        .modal-box select,
+        .modal-box textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-body);
+            color: var(--text-primary);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 320px;
+            width: 100%;
+        }
+        .toast {
+            padding: 12px 18px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--accent);
+            font-size: 0.9rem;
+            animation: slideIn 0.3s ease;
+        }
+        .toast-success { border-left-color: var(--success); }
+        .toast-error { border-left-color: var(--danger); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                height: 100%;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                width: 220px;
+                z-index: 200;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .top-header .left .hamburger { display: block; }
+            .content { padding: 16px; }
+            .widget-grid { grid-template-columns: 1fr 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .avatar-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .widget-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .top-header .right .coins-xp span { font-size: 0.75rem; padding: 2px 8px; }
+        }
+
+        .hidden { display: none !important; }
+        .empty-msg { text-align: center; color: var(--text-muted); padding: 40px 0; }
+
+        /* мобильный оверлей */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 150;
+        }
+        .sidebar-overlay.show { display: block; }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">📚 Словарь <span>CRM</span></div>
+        <nav>
+            <button data-tab="dashboard" class="active"><span class="icon">📊</span> Дашборд</button>
+            <button data-tab="library"><span class="icon">📖</span> Библиотека</button>
+            <button data-tab="test"><span class="icon">🧠</span> Тест</button>
+            <button data-tab="stats"><span class="icon">📈</span> Статистика</button>
+            <button data-tab="profile"><span class="icon">⚙️</span> Профиль</button>
+        </nav>
+        <div class="user-footer">
+            <span class="avatar-small" id="sidebarAvatar">📚</span>
+            <span id="sidebarName">Ученик</span>
+        </div>
+    </aside>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- HEADER -->
+        <header class="top-header">
+            <div class="left">
+                <button class="hamburger" id="hamburgerBtn">☰</button>
+                <span class="page-title" id="pageTitle">Дашборд</span>
+            </div>
+            <div class="right">
+                <div class="user-badge">
+                    <span class="avatar" id="headerAvatar">📚</span>
+                    <div class="info">
+                        <div class="name" id="headerName">Ученик</div>
+                        <div class="level">Ур. <span id="headerLevel">1</span></div>
+                    </div>
+                </div>
+                <div class="coins-xp">
+                    <span>🪙 <span id="headerCoins">0</span></span>
+                    <span>⚡ <span id="headerXp">0</span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <!-- DASHBOARD -->
+            <section class="tab-content active" id="tab-dashboard">
+                <div class="widget-grid">
+                    <div class="widget"><div class="number" id="totalTerms">0</div><div class="label">Всего терминов</div></div>
+                    <div class="widget"><div class="number" id="learnedTerms">0</div><div class="label">Выучено</div></div>
+                    <div class="widget"><div class="number" id="testsPassed">0</div><div class="label">Тестов пройдено</div></div>
+                    <div class="widget"><div class="number" id="avgCorrect">0%</div><div class="label">Средняя точность</div></div>
+                </div>
+
+                <div class="daily-bonus-widget">
+                    <span>Ежедневный бонус <span id="streakInfo">(серия: 0)</span></span>
+                    <button id="dailyBonusBtn">🎁 Забрать</button>
+                </div>
+
+                <div class="category-progress">
+                    <div class="title">Прогресс по категориям</div>
+                    <div id="categoryProgressList"></div>
+                </div>
+
+                <div class="recent-terms">
+                    <div class="title">Недавно добавленные</div>
+                    <div id="recentTermsList"></div>
+                </div>
+            </section>
+
+            <!-- LIBRARY -->
+            <section class="tab-content" id="tab-library">
+                <div class="library-controls">
+                    <input type="text" id="searchInput" placeholder="Поиск терминов...">
+                    <select id="categoryFilter"><option value="all">Все категории</option></select>
+                    <select id="difficultyFilter"><option value="all">Любая сложность</option><option value="1">⭐</option><option value="2">⭐⭐</option><option value="3">⭐⭐⭐</option></select>
+                    <select id="statusFilter"><option value="all">Все</option><option value="learned">Выученные</option><option value="unlearned">Невыученные</option></select>
+                    <select id="sortSelect"><option value="newest">Новые</option><option value="az">А–Я</option><option value="difficulty">Сложность</option></select>
+                    <button class="add-btn" id="addTermBtn">+ Добавить</button>
+                </div>
+                <div class="table-wrap">
+                    <table class="terms-table">
+                        <thead><tr><th>Термин</th><th>Определение</th><th>Категория</th><th>Сложность</th><th>Статус</th><th>Действия</th></tr></thead>
+                        <tbody id="termTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TEST -->
+            <section class="tab-content" id="tab-test">
+                <div class="test-setup" id="testSetup">
+                    <div class="row">
+                        <select id="testMode"><option value="termToDef">Термин → Определение</option><option value="defToTerm">Определение → Термин</option></select>
+                        <select id="testCategory"><option value="all">Все категории</option></select>
+                        <select id="testCount"><option value="5">5 вопросов</option><option value="10" selected>10</option><option value="20">20</option><option value="all">Все</option></select>
+                        <select id="testDifficulty"><option value="all">Любая</option><option value="1">⭐</option><option value="2">⭐⭐</option><option value="3">⭐⭐⭐</option></select>
+                    </div>
+                    <button class="start-btn" id="startTestBtn">🚀 Начать тест</button>
+                </div>
+                <div id="testArea" class="hidden">
+                    <div class="test-question" id="questionBox">
+                        <div class="q-text" id="qText">Вопрос</div>
+                        <div class="test-options" id="optionsContainer"></div>
+                        <div id="testProgress" style="margin-top:14px;color:var(--text-muted);"></div>
+                    </div>
+                    <div id="testResult" class="hidden test-result"></div>
+                </div>
+            </section>
+
+            <!-- STATS -->
+            <section class="tab-content" id="tab-stats">
+                <div class="stats-filters" id="statsFilters">
+                    <button data-period="today">Сегодня</button>
+                    <button data-period="week" class="active">Неделя</button>
+                    <button data-period="month">Месяц</button>
+                    <button data-period="all">Всё время</button>
+                </div>
+                <div class="stats-grid" id="statsNumbers"></div>
+                <canvas id="activityChart" height="150"></canvas>
+                <canvas id="categoryPie" height="150"></canvas>
+                <h4 style="margin-top:20px;font-weight:600;">История тестов</h4>
+                <div style="overflow-x:auto;">
+                    <table class="history-table"><thead><tr><th>Дата</th><th>Категория</th><th>Вопросов</th><th>%</th><th>XP</th></tr></thead><tbody id="historyBody"></tbody></table>
+                </div>
+            </section>
+
+            <!-- PROFILE -->
+            <section class="tab-content" id="tab-profile">
+                <div class="profile-section">
+                    <h3>👤 Профиль</h3>
+                    <label>Имя</label>
+                    <input type="text" id="profileName" value="Ученик">
+                    <label>Аватар</label>
+                    <div class="avatar-grid" id="avatarGrid"></div>
+                    <label>Тема оформления</label>
+                    <select id="themeSelect">
+                        <option value="light">Светлая</option>
+                        <option value="dark">Тёмная</option>
+                        <option value="purple">Фиолетовая</option>
+                        <option value="green">Зелёная</option>
+                        <option value="blue">Синяя</option>
+                    </select>
+                </div>
+                <div class="profile-section">
+                    <h3>⚙️ Настройки наград</h3>
+                    <div class="settings-row"><label>XP за правильный ответ</label><input type="number" id="setXpCorrect" value="3"></div>
+                    <div class="settings-row"><label>XP за выучивание</label><input type="number" id="setXpLearn" value="5"></div>
+                    <div class="settings-row"><label>Монет за правильный</label><input type="number" id="setCoinCorrect" value="1"></div>
+                    <div class="settings-row"><label>Монет за выучивание</label><input type="number" id="setCoinLearn" value="2"></div>
+                    <div class="settings-row"><label>Ежедневный бонус XP</label><input type="number" id="setDailyXp" value="5"></div>
+                    <div class="settings-row"><label>Ежедневный бонус монет</label><input type="number" id="setDailyCoins" value="2"></div>
+                    <button class="btn-primary" id="saveSettingsBtn">Сохранить настройки</button>
+                </div>
+                <div class="profile-section">
+                    <h3>📁 Данные</h3>
+                    <button class="btn-primary" id="exportDataBtn">Экспорт JSON</button>
+                    <button class="btn-primary" id="importDataBtn" style="margin-left:8px;">Импорт JSON</button>
+                    <input type="file" id="importFileInput" accept=".json" style="display:none;">
+                    <button class="btn-danger" id="resetDataBtn" style="margin-left:8px;">Сбросить всё</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal-box" id="modalBox">
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  ПОЛНАЯ ЛОГИКА (та же, что и в предыдущей версии, но с новым UI)
+        // ============================================================
+        (function() {
+            'use strict';
+
+            const STORE_PREFIX = 'dict_';
+            const defaultTerms = [
+                { id: 't1', term: 'SQL-инъекция', definition: 'Внедрение вредоносного SQL-кода в запрос', category: 'Безопасность',
+                    difficulty: 3, learned: false, added: new Date(Date.now() - 86400000 * 2).toISOString() },
+                { id: 't2', term: 'XSS', definition: 'Межсайтовый скриптинг, внедрение скриптов в веб-страницы',
+                    category: 'Безопасность', difficulty: 2, learned: false, added: new Date(Date.now() - 86400000 * 1)
+                    .toISOString() },
+                { id: 't3', term: 'API', definition: 'Интерфейс программирования приложений', category: 'Программирование',
+                    difficulty: 1, learned: false, added: new Date().toISOString() },
+                { id: 't4', term: 'TCP/IP', definition: 'Набор протоколов передачи данных в сетях', category: 'Сети',
+                    difficulty: 2, learned: false, added: new Date(Date.now() - 3600000 * 2).toISOString() },
+                { id: 't5', term: 'Docker', definition: 'Платформа для контейнеризации приложений', category: 'Программирование',
+                    difficulty: 2, learned: false, added: new Date(Date.now() - 7200000).toISOString() },
+                { id: 't6', term: 'Фишинг', definition: 'Вид интернет-мошенничества с целью кражи данных',
+                    category: 'Безопасность', difficulty: 1, learned: false, added: new Date(Date.now() - 3600000)
+                    .toISOString() }
+            ];
+
+            function getStore(key, def) {
+                try { const v = localStorage.getItem(STORE_PREFIX + key); return v ? JSON.parse(v) : def; } catch { return def; }
+            }
+
+            function setStore(key, val) {
+                try { localStorage.setItem(STORE_PREFIX + key, JSON.stringify(val)); } catch (e) { showToast('Ошибка сохранения',
+                        'error'); }
+            }
+
+            let terms = getStore('terms', defaultTerms);
+            let profile = getStore('profile', {
+                name: 'Ученик',
+                avatar: '📚',
+                theme: 'light',
+                level: 1,
+                xp: 0,
+                coins: 0,
+                dailyBonusDate: null,
+                dailyStreak: 0,
+                settings: {
+                    xpPerCorrect: 3,
+                    xpPerLearn: 5,
+                    coinPerCorrect: 1,
+                    coinPerLearn: 2,
+                    dailyBonusXp: 5,
+                    dailyBonusCoins: 2
+                }
+            });
+            let testHistory = getStore('testHistory', []);
+
+            function getAllCategories() {
+                const cats = new Set();
+                terms.forEach(t => cats.add(t.category));
+                return ['all', ...Array.from(cats)];
+            }
+
+            // ----- XP / УРОВЕНЬ -----
+            function calcLevel(xp) {
+                if (xp < 50) return 1;
+                let lvl = 1,
+                    need = 50;
+                while (xp >= need) { xp -= need;
+                    lvl++;
+                    need = 50 * lvl * lvl; }
+                return lvl;
+            }
+
+            function getXpForLevel(level) {
+                if (level <= 1) return 0;
+                let total = 0;
+                for (let i = 1; i < level; i++) total += 50 * i * i;
+                return total;
+            }
+
+            function getXpToNextLevel(level) { return 50 * level * level; }
+
+            function addXp(amount, showToastMsg = true) {
+                if (amount === 0) return;
+                let newXp = profile.xp + amount;
+                if (newXp < 0) newXp = 0;
+                profile.xp = newXp;
+                let oldLevel = profile.level;
+                let newLevel = calcLevel(profile.xp);
+                if (newLevel > oldLevel) {
+                    for (let lv = oldLevel + 1; lv <= newLevel; lv++) {
+                        profile.coins += 10;
+                        showToast(`🎉 Уровень ${lv} достигнут! +10 монет`, 'success');
+                    }
+                    profile.level = newLevel;
+                }
+                profile.coins = Math.max(0, profile.coins);
+                saveProfile();
+                updateUI();
+            }
+
+            function addCoins(amount) {
+                if (amount === 0) return;
+                profile.coins = Math.max(0, profile.coins + amount);
+                saveProfile();
+                updateUI();
+            }
+
+            function saveProfile() {
+                setStore('profile', profile);
+                setStore('terms', terms);
+                setStore('testHistory', testHistory);
+            }
+
+            // ----- TOAST -----
+            function showToast(text, type = 'info') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast toast-' + type;
+                toast.textContent = text;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 2800);
+            }
+
+            // ----- MODAL -----
+            function openModal(html) {
+                const overlay = document.getElementById('modalOverlay');
+                document.getElementById('modalContent').innerHTML = html;
+                overlay.classList.remove('hidden');
+                const cancelBtn = document.querySelector('#modalContent .btn-secondary');
+                if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+            }
+
+            function closeModal() {
+                document.getElementById('modalOverlay').classList.add('hidden');
+            }
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeModal();
+            });
+
+            // ----- UI UPDATE -----
+            function updateUI() {
+                // header + sidebar
+                document.getElementById('headerAvatar').textContent = profile.avatar;
+                document.getElementById('headerName').textContent = profile.name;
+                document.getElementById('headerLevel').textContent = profile.level;
+                document.getElementById('headerCoins').textContent = profile.coins;
+                document.getElementById('headerXp').textContent = profile.xp;
+                document.getElementById('sidebarAvatar').textContent = profile.avatar;
+                document.getElementById('sidebarName').textContent = profile.name;
+
+                // dashboard
+                const total = terms.length;
+                const learned = terms.filter(t => t.learned).length;
+                document.getElementById('totalTerms').textContent = total;
+                document.getElementById('learnedTerms').textContent = learned;
+                const tests = testHistory.length;
+                document.getElementById('testsPassed').textContent = tests;
+                let totalCorrect = 0,
+                    totalQ = 0;
+                testHistory.forEach(h => { totalCorrect += h.correct;
+                    totalQ += h.total; });
+                document.getElementById('avgCorrect').textContent = totalQ ? Math.round(totalCorrect / totalQ * 100) + '%' :
+                    '0%';
+
+                const streak = profile.dailyStreak || 0;
+                document.getElementById('streakInfo').textContent = `(серия: ${streak})`;
+                const lastDate = profile.dailyBonusDate;
+                const today = new Date().toDateString();
+                const btn = document.getElementById('dailyBonusBtn');
+                if (lastDate === today) {
+                    btn.disabled = true;
+                    btn.textContent = '✅ Получено сегодня';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = '🎁 Забрать бонус';
+                }
+
+                renderCategoryProgress();
+                renderRecentTerms();
+                populateCategoryFilters();
+                renderTermTable();
+                populateTestCategories();
+                renderStats();
+                renderAvatarGrid();
+                document.getElementById('profileName').value = profile.name;
+                document.getElementById('themeSelect').value = profile.theme;
+                document.getElementById('setXpCorrect').value = profile.settings.xpPerCorrect;
+                document.getElementById('setXpLearn').value = profile.settings.xpPerLearn;
+                document.getElementById('setCoinCorrect').value = profile.settings.coinPerCorrect;
+                document.getElementById('setCoinLearn').value = profile.settings.coinPerLearn;
+                document.getElementById('setDailyXp').value = profile.settings.dailyBonusXp;
+                document.getElementById('setDailyCoins').value = profile.settings.dailyBonusCoins;
+
+                applyTheme(profile.theme);
+            }
+
+            function applyTheme(theme) {
+                document.body.classList.remove('theme-light', 'theme-dark', 'theme-purple', 'theme-green', 'theme-blue');
+                if (theme === 'light') document.body.classList.add('theme-light');
+                else if (theme === 'dark') document.body.classList.add('theme-dark');
+                else if (theme === 'purple') document.body.classList.add('theme-purple');
+                else if (theme === 'green') document.body.classList.add('theme-green');
+                else if (theme === 'blue') document.body.classList.add('theme-blue');
+                else document.body.classList.add('theme-light');
+                profile.theme = theme;
+                saveProfile();
+            }
+
+            // ----- CATEGORY PROGRESS -----
+            function renderCategoryProgress() {
+                const container = document.getElementById('categoryProgressList');
+                const cats = getAllCategories().filter(c => c !== 'all');
+                let html = '';
+                cats.forEach(cat => {
+                    const items = terms.filter(t => t.category === cat);
+                    const total = items.length;
+                    const learned = items.filter(t => t.learned).length;
+                    const pct = total ? Math.round(learned / total * 100) : 0;
+                    html += `<div class="category-row" data-category="${cat}">
+                                <span>${cat}</span>
+                                <span class="cat-bar"><span class="cat-fill" style="width:${pct}%"></span></span>
+                                <span>${learned}/${total}</span>
+                            </div>`;
+                });
+                container.innerHTML = html;
+                container.querySelectorAll('.category-row').forEach(row => {
+                    row.addEventListener('click', function() {
+                        document.getElementById('categoryFilter').value = this.dataset.category;
+                        switchTab('library');
+                        renderTermTable();
+                    });
+                });
+            }
+
+            function renderRecentTerms() {
+                const container = document.getElementById('recentTermsList');
+                const sorted = [...terms].sort((a, b) => new Date(b.added) - new Date(a.added));
+                const recent = sorted.slice(0, 5);
+                if (!recent.length) { container.innerHTML = '<div class="empty-msg">Нет терминов</div>'; return; }
+                container.innerHTML = recent.map(t =>
+                    `<div class="recent-term-item">${t.term} <span class="tag">${t.category}</span></div>`
+                ).join('');
+            }
+
+            // ----- LIBRARY TABLE -----
+            function populateCategoryFilters() {
+                const cats = getAllCategories();
+                const select = document.getElementById('categoryFilter');
+                const current = select.value;
+                select.innerHTML = cats.map(c => `<option value="${c}">${c === 'all' ? 'Все категории' : c}</option>`).join('');
+                select.value = current;
+            }
+
+            function renderTermTable() {
+                const search = document.getElementById('searchInput').value.toLowerCase();
+                const cat = document.getElementById('categoryFilter').value;
+                const diff = document.getElementById('difficultyFilter').value;
+                const status = document.getElementById('statusFilter').value;
+                const sort = document.getElementById('sortSelect').value;
+
+                let filtered = terms.filter(t => {
+                    const matchSearch = t.term.toLowerCase().includes(search) || t.definition.toLowerCase().includes(
+                        search);
+                    const matchCat = cat === 'all' || t.category === cat;
+                    const matchDiff = diff === 'all' || t.difficulty == diff;
+                    const matchStatus = status === 'all' || (status === 'learned' && t.learned) || (status ===
+                        'unlearned' && !t.learned);
+                    return matchSearch && matchCat && matchDiff && matchStatus;
+                });
+
+                if (sort === 'az') filtered.sort((a, b) => a.term.localeCompare(b.term));
+                else if (sort === 'difficulty') filtered.sort((a, b) => a.difficulty - b.difficulty);
+                else filtered.sort((a, b) => new Date(b.added) - new Date(a.added));
+
+                const tbody = document.getElementById('termTableBody');
+                if (!filtered.length) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-msg">Ничего не найдено</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = filtered.map(t => {
+                    const stars = '⭐'.repeat(t.difficulty);
+                    const statusBadge = t.learned ? '<span class="learned-badge">✅ Выучено</span>' :
+                        '<span style="color:var(--text-muted);">Не выучено</span>';
+                    return `<tr>
+                                <td><strong>${t.term}</strong></td>
+                                <td>${t.definition}</td>
+                                <td><span class="tag">${t.category}</span></td>
+                                <td>${stars}</td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    <div class="term-actions">
+                                        <button class="edit-term" data-id="${t.id}">✏️</button>
+                                        <button class="delete-term" data-id="${t.id}">🗑️</button>
+                                        <button class="toggle-learn" data-id="${t.id}">${t.learned ? '↩️' : '✅'}</button>
+                                    </div>
+                                </td>
+                            </tr>`;
+                }).join('');
+
+                tbody.querySelectorAll('.edit-term').forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        const id = this.dataset.id;
+                        const term = terms.find(t => t.id === id);
+                        if (term) showEditTermModal(term);
+                    });
+                });
+                tbody.querySelectorAll('.delete-term').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        confirmDeleteTerm(id);
+                    });
+                });
+                tbody.querySelectorAll('.toggle-learn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = this.dataset.id;
+                        toggleLearned(id);
+                    });
+                });
+            }
+
+            // ----- ADD / EDIT / DELETE / TOGGLE LEARNED -----
+            function showAddTermModal() {
+                const cats = getAllCategories().filter(c => c !== 'all');
+                const html = `
+                            <h3>➕ Добавить термин</h3>
+                            <div class="field"><label>Термин *</label><input id="modalTerm" placeholder="Напр. Брандмауэр"></div>
+                            <div class="field"><label>Определение *</label><textarea id="modalDef" placeholder="Описание..."></textarea></div>
+                            <div class="field"><label>Категория</label>
+                                <select id="modalCat">${cats.map(c => `<option value="${c}">${c}</option>`).join('')}<option value="__new">➕ Новая категория</option></select>
+                            </div>
+                            <div class="field" id="newCatField" style="display:none;"><label>Новая категория</label><input id="modalNewCat" placeholder="Название"></div>
+                            <div class="field"><label>Сложность</label><select id="modalDiff"><option value="1">⭐</option><option value="2">⭐⭐</option><option value="3">⭐⭐⭐</option></select></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveTerm">Сохранить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalCat').addEventListener('change', function() {
+                    document.getElementById('newCatField').style.display = this.value === '__new' ? 'block' : 'none';
+                });
+                document.getElementById('modalSaveTerm').addEventListener('click', function() {
+                    const term = document.getElementById('modalTerm').value.trim();
+                    const def = document.getElementById('modalDef').value.trim();
+                    if (!term || !def) { showToast('Заполните поля', 'error'); return; }
+                    let cat = document.getElementById('modalCat').value;
+                    if (cat === '__new') cat = document.getElementById('modalNewCat').value.trim() || 'Общие';
+                    const diff = parseInt(document.getElementById('modalDiff').value);
+                    const newTerm = {
+                        id: 't' + Date.now() + Math.random().toString(36).slice(2, 6),
+                        term,
+                        definition: def,
+                        category: cat,
+                        difficulty: diff,
+                        learned: false,
+                        added: new Date().toISOString()
+                    };
+                    terms.push(newTerm);
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast(`Термин "${term}" добавлен`, 'success');
+                });
+            }
+
+            function showEditTermModal(term) {
+                const cats = getAllCategories().filter(c => c !== 'all');
+                const html = `
+                            <h3>✏️ Редактировать</h3>
+                            <div class="field"><label>Термин *</label><input id="modalTerm" value="${term.term}"></div>
+                            <div class="field"><label>Определение *</label><textarea id="modalDef">${term.definition}</textarea></div>
+                            <div class="field"><label>Категория</label>
+                                <select id="modalCat">${cats.map(c => `<option value="${c}" ${c===term.category?'selected':''}>${c}</option>`).join('')}<option value="__new">➕ Новая категория</option></select>
+                            </div>
+                            <div class="field" id="newCatField" style="display:none;"><label>Новая категория</label><input id="modalNewCat"></div>
+                            <div class="field"><label>Сложность</label><select id="modalDiff"><option value="1" ${term.difficulty===1?'selected':''}>⭐</option><option value="2" ${term.difficulty===2?'selected':''}>⭐⭐</option><option value="3" ${term.difficulty===3?'selected':''}>⭐⭐⭐</option></select></div>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-primary" id="modalSaveTerm">Сохранить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('modalCat').addEventListener('change', function() {
+                    document.getElementById('newCatField').style.display = this.value === '__new' ? 'block' : 'none';
+                });
+                document.getElementById('modalSaveTerm').addEventListener('click', function() {
+                    const newTerm = document.getElementById('modalTerm').value.trim();
+                    const newDef = document.getElementById('modalDef').value.trim();
+                    if (!newTerm || !newDef) { showToast('Заполните поля', 'error'); return; }
+                    let cat = document.getElementById('modalCat').value;
+                    if (cat === '__new') cat = document.getElementById('modalNewCat').value.trim() || 'Общие';
+                    const diff = parseInt(document.getElementById('modalDiff').value);
+                    term.term = newTerm;
+                    term.definition = newDef;
+                    term.category = cat;
+                    term.difficulty = diff;
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Термин обновлён', 'success');
+                });
+            }
+
+            function confirmDeleteTerm(id) {
+                const term = terms.find(t => t.id === id);
+                if (!term) return;
+                const html = `
+                            <h3>🗑️ Удалить термин?</h3>
+                            <p>Вы уверены, что хотите удалить "<strong>${term.term}</strong>"?</p>
+                            <div class="modal-actions">
+                                <button class="btn-secondary">Отмена</button>
+                                <button class="btn-danger" id="confirmDelete">Удалить</button>
+                            </div>
+                        `;
+                openModal(html);
+                document.getElementById('confirmDelete').addEventListener('click', function() {
+                    terms = terms.filter(t => t.id !== id);
+                    saveProfile();
+                    updateUI();
+                    closeModal();
+                    showToast('Термин удалён', 'info');
+                });
+            }
+
+            function toggleLearned(id) {
+                const term = terms.find(t => t.id === id);
+                if (!term) return;
+                const was = term.learned;
+                if (was) {
+                    const coinBack = profile.settings.coinPerLearn || 2;
+                    const xpBack = profile.settings.xpPerLearn || 5;
+                    if (profile.coins < coinBack) {
+                        showToast(`Недостаточно монет для отката (нужно ${coinBack} 🪙)`, 'error');
+                        return;
+                    }
+                    term.learned = false;
+                    addCoins(-coinBack);
+                    addXp(-xpBack, false);
+                    showToast(`Выученность снята: -${coinBack} 🪙, -${xpBack} XP`, 'info');
+                } else {
+                    term.learned = true;
+                    addCoins(profile.settings.coinPerLearn || 2);
+                    addXp(profile.settings.xpPerLearn || 5);
+                    showToast(`Выучено! +${profile.settings.xpPerLearn} XP, +${profile.settings.coinPerLearn} монет`,
+                        'success');
+                }
+                saveProfile();
+                updateUI();
+            }
+
+            // ----- TEST -----
+            let testState = {
+                questions: [],
+                currentIndex: 0,
+                correctCount: 0,
+                mode: 'termToDef',
+                category: 'all',
+                total: 0,
+                xpEarned: 0,
+                coinsEarned: 0,
+                answered: false,
+                historyRecord: null
+            };
+
+            function populateTestCategories() {
+                const cats = getAllCategories();
+                const select = document.getElementById('testCategory');
+                const current = select.value;
+                select.innerHTML = cats.map(c => `<option value="${c}">${c === 'all' ? 'Все категории' : c}</option>`).join('');
+                select.value = current;
+            }
+
+            function startTest() {
+                const mode = document.getElementById('testMode').value;
+                const cat = document.getElementById('testCategory').value;
+                const count = document.getElementById('testCount').value;
+                const diff = document.getElementById('testDifficulty').value;
+
+                let pool = terms.filter(t => {
+                    const matchCat = cat === 'all' || t.category === cat;
+                    const matchDiff = diff === 'all' || t.difficulty == diff;
+                    return matchCat && matchDiff;
+                });
+                if (!pool.length) { showToast('Нет терминов под выбранные фильтры', 'error'); return; }
+                if (count !== 'all') {
+                    const n = parseInt(count);
+                    if (pool.length > n) pool = shuffleArray(pool).slice(0, n);
+                }
+                const questions = pool.map(term => {
+                    const isTermMode = mode === 'termToDef';
+                    const correct = isTermMode ? term.definition : term.term;
+                    let wrongs = terms.filter(t => t.id !== term.id);
+                    if (isTermMode) wrongs = wrongs.map(t => t.definition);
+                    else wrongs = wrongs.map(t => t.term);
+                    wrongs = [...new Set(wrongs)].filter(w => w !== correct && w.trim() !== '');
+                    shuffleArray(wrongs);
+                    const options = [correct, ...wrongs.slice(0, 3)];
+                    shuffleArray(options);
+                    return {
+                        term: term,
+                        questionText: isTermMode ? term.term : term.definition,
+                        correctAnswer: correct,
+                        options: options,
+                        isTermMode: isTermMode,
+                        difficulty: term.difficulty
+                    };
+                });
+
+                testState.questions = questions;
+                testState.currentIndex = 0;
+                testState.correctCount = 0;
+                testState.mode = mode;
+                testState.category = cat;
+                testState.total = questions.length;
+                testState.xpEarned = 0;
+                testState.coinsEarned = 0;
+                testState.answered = false;
+                testState.historyRecord = {
+                    date: new Date().toISOString(),
+                    mode: mode,
+                    category: cat === 'all' ? 'Все' : cat,
+                    total: questions.length,
+                    correct: 0,
+                    xpEarned: 0,
+                    coinsEarned: 0
+                };
+
+                document.getElementById('testSetup').classList.add('hidden');
+                document.getElementById('testArea').classList.remove('hidden');
+                document.getElementById('testResult').classList.add('hidden');
+                renderQuestion();
+            }
+
+            function renderQuestion() {
+                const q = testState.questions[testState.currentIndex];
+                if (!q) { finishTest(); return; }
+                document.getElementById('qText').textContent = q.questionText;
+                const container = document.getElementById('optionsContainer');
+                container.innerHTML = '';
+                q.options.forEach(opt => {
+                    const btn = document.createElement('button');
+                    btn.textContent = opt;
+                    btn.dataset.value = opt;
+                    btn.addEventListener('click', function() { onOptionClick(this, q); });
+                    container.appendChild(btn);
+                });
+                document.getElementById('testProgress').textContent =
+                    `Вопрос ${testState.currentIndex+1} из ${testState.total}`;
+                testState.answered = false;
+                container.querySelectorAll('button').forEach(b => b.classList.remove('correct', 'wrong'));
+                container.querySelectorAll('button').forEach(b => b.disabled = false);
+            }
+
+            function onOptionClick(btn, q) {
+                if (testState.answered) return;
+                const selected = btn.dataset.value;
+                const correct = q.correctAnswer;
+                const isCorrect = selected === correct;
+                if (isCorrect) {
+                    testState.correctCount++;
+                    const xpGain = (profile.settings.xpPerCorrect || 3) * q.difficulty;
+                    const coinGain = profile.settings.coinPerCorrect || 1;
+                    addXp(xpGain);
+                    addCoins(coinGain);
+                    testState.xpEarned += xpGain;
+                    testState.coinsEarned += coinGain;
+                    btn.classList.add('correct');
+                    showToast(`✅ Правильно! +${xpGain} XP, +${coinGain} 🪙`, 'success');
+                } else {
+                    btn.classList.add('wrong');
+                    const buttons = document.getElementById('optionsContainer').querySelectorAll('button');
+                    buttons.forEach(b => {
+                        if (b.dataset.value === correct) b.classList.add('correct');
+                    });
+                    showToast(`❌ Неправильно. Правильно: ${correct}`, 'error');
+                }
+                document.getElementById('optionsContainer').querySelectorAll('button').forEach(b => b.disabled = true);
+                testState.answered = true;
+                setTimeout(() => {
+                    testState.currentIndex++;
+                    if (testState.currentIndex < testState.total) renderQuestion();
+                    else finishTest();
+                }, 1500);
+            }
+
+            function finishTest() {
+                const total = testState.total;
+                const correct = testState.correctCount;
+                const pct = total ? Math.round(correct / total * 100) : 0;
+                const record = testState.historyRecord;
+                record.correct = correct;
+                record.xpEarned = testState.xpEarned;
+                record.coinsEarned = testState.coinsEarned;
+                testHistory.push(record);
+                saveProfile();
+                document.getElementById('questionBox').classList.add('hidden');
+                document.getElementById('testResult').classList.remove('hidden');
+                document.getElementById('testResult').innerHTML = `
+                            <h3>🏁 Тест завершён!</h3>
+                            <p>Правильных: ${correct} из ${total} (${pct}%)</p>
+                            <p>Заработано: ${testState.xpEarned} XP, ${testState.coinsEarned} 🪙</p>
+                            <button class="btn-primary" id="testAgainBtn">🔄 Пройти ещё</button>
+                            <button class="btn-secondary" id="testHomeBtn" style="margin-left:8px;">🏠 На главную</button>
+                        `;
+                document.getElementById('testAgainBtn').addEventListener('click', function() {
+                    document.getElementById('testResult').classList.add('hidden');
+                    document.getElementById('questionBox').classList.remove('hidden');
+                    document.getElementById('testSetup').classList.remove('hidden');
+                    document.getElementById('testArea').classList.add('hidden');
+                    testState = {};
+                    updateUI();
+                });
+                document.getElementById('testHomeBtn').addEventListener('click', function() {
+                    switchTab('dashboard');
+                    document.getElementById('testSetup').classList.remove('hidden');
+                    document.getElementById('testArea').classList.add('hidden');
+                    document.getElementById('testResult').classList.add('hidden');
+                    document.getElementById('questionBox').classList.remove('hidden');
+                    updateUI();
+                });
+                updateUI();
+            }
+
+            function shuffleArray(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+                return arr;
+            }
+
+            // ----- STATS -----
+            let statsPeriod = 'week';
+
+            function renderStats() {
+                const period = statsPeriod;
+                let filtered = testHistory;
+                const now = new Date();
+                if (period === 'today') {
+                    const todayStr = now.toDateString();
+                    filtered = testHistory.filter(h => new Date(h.date).toDateString() === todayStr);
+                } else if (period === 'week') {
+                    const start = new Date(now);
+                    start.setDate(now.getDate() - now.getDay() + 1);
+                    start.setHours(0, 0, 0, 0);
+                    filtered = testHistory.filter(h => new Date(h.date) >= start);
+                } else if (period === 'month') {
+                    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                    filtered = testHistory.filter(h => new Date(h.date) >= start);
+                }
+                const totalTests = filtered.length;
+                let totalQ = 0,
+                    totalCorr = 0,
+                    totalXp = 0,
+                    totalCoins = 0;
+                filtered.forEach(h => { totalQ += h.total;
+                    totalCorr += h.correct;
+                    totalXp += h.xpEarned || 0;
+                    totalCoins += h.coinsEarned || 0; });
+                const pct = totalQ ? Math.round(totalCorr / totalQ * 100) : 0;
+
+                document.getElementById('statsNumbers').innerHTML = `
+                            <div class="stat-item"><div class="num">${totalTests}</div><div class="label">Тестов</div></div>
+                            <div class="stat-item"><div class="num">${totalQ}</div><div class="label">Вопросов</div></div>
+                            <div class="stat-item"><div class="num">${pct}%</div><div class="label">Точность</div></div>
+                            <div class="stat-item"><div class="num">${totalXp}</div><div class="label">XP</div></div>
+                            <div class="stat-item"><div class="num">${totalCoins}</div><div class="label">🪙</div></div>
+                        `;
+
+                drawActivityChart(filtered);
+                drawCategoryPie();
+
+                const tbody = document.getElementById('historyBody');
+                if (!filtered.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">Нет данных</td></tr>';
+                } else {
+                    const sorted = filtered.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+                    tbody.innerHTML = sorted.slice(0, 20).map(h =>
+                        `<tr><td>${new Date(h.date).toLocaleDateString()}</td><td>${h.category}</td><td>${h.total}</td><td>${Math.round(h.correct/h.total*100)}%</td><td>${h.xpEarned||0}</td></tr>`
+                    ).join('');
+                }
+            }
+
+            function drawActivityChart(filtered) {
+                const canvas = document.getElementById('activityChart');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width = canvas.parentElement.clientWidth || 300;
+                const H = canvas.height = 150;
+                ctx.clearRect(0, 0, W, H);
+                const days = [];
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const key = d.toDateString();
+                    const count = filtered.filter(h => new Date(h.date).toDateString() === key).length;
+                    days.push({ date: d, count });
+                }
+                const max = Math.max(1, ...days.map(d => d.count));
+                const pad = { top: 10, bottom: 20, left: 20, right: 10 };
+                const chartW = W - pad.left - pad.right;
+                const chartH = H - pad.top - pad.bottom;
+                const step = chartW / 6;
+                ctx.fillStyle = 'var(--text-secondary)';
+                ctx.font = '8px sans-serif';
+                days.forEach((d, i) => {
+                    const x = pad.left + i * step;
+                    const h = (d.count / max) * chartH;
+                    const y = pad.top + chartH - h;
+                    ctx.fillStyle = 'var(--accent)';
+                    ctx.fillRect(x, y, step * 0.6, h);
+                    ctx.fillStyle = 'var(--text-muted)';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(d.date.getDate() + '/' + (d.date.getMonth() + 1), x + step * 0.3, pad.top + chartH + 14);
+                    ctx.fillText(d.count, x + step * 0.3, y - 4);
+                });
+            }
+
+            function drawCategoryPie() {
+                const canvas = document.getElementById('categoryPie');
+                const ctx = canvas.getContext('2d');
+                const W = canvas.width = canvas.parentElement.clientWidth || 300;
+                const H = canvas.height = 160;
+                ctx.clearRect(0, 0, W, H);
+                const cats = {};
+                terms.forEach(t => { cats[t.category] = (cats[t.category] || 0) + 1; });
+                const total = Object.values(cats).reduce((a, b) => a + b, 0);
+                if (!total) return;
+                const colors = ['#4A6CF7', '#2ecc71', '#f1c40f', '#e74c3c', '#9b59b6', '#1abc9c', '#e67e22', '#1dd1a1'];
+                const cx = W / 2,
+                    cy = H / 2 - 10,
+                    r = Math.min(W, H) / 2 - 30;
+                let start = -Math.PI / 2;
+                const keys = Object.keys(cats);
+                keys.forEach((k, i) => {
+                    const val = cats[k];
+                    const angle = (val / total) * 2 * Math.PI;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.arc(cx, cy, r, start, start + angle);
+                    ctx.closePath();
+                    ctx.fillStyle = colors[i % colors.length];
+                    ctx.fill();
+                    ctx.strokeStyle = 'var(--bg-body)';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    const mid = start + angle / 2;
+                    const xText = cx + Math.cos(mid) * (r + 14);
+                    const yText = cy + Math.sin(mid) * (r + 14);
+                    ctx.beginPath();
+                    ctx.moveTo(cx + Math.cos(mid) * r, cy + Math.sin(mid) * r);
+                    ctx.lineTo(cx + Math.cos(mid) * (r + 10), cy + Math.sin(mid) * (r + 10));
+                    ctx.strokeStyle = 'var(--text-muted)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    ctx.fillStyle = 'var(--text-primary)';
+                    ctx.font = '9px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    const pct = Math.round(val / total * 100);
+                    ctx.fillText(`${k} ${pct}%`, xText, yText);
+                    start += angle;
+                });
+            }
+
+            // ----- PROFILE AVATARS -----
+            function renderAvatarGrid() {
+                const grid = document.getElementById('avatarGrid');
+                const avatars = ['📚', '😎', '😊', '🐱', '🐶', '🦊', '🐼', '🐨', '🦁', '🐧', '🐦', '🐤', '🐣', '🐥', '🦄', '🐴', '🐞',
+                    '🐝', '🌸', '🌺', '🌻', '🌷', '🍕', '🍔', '🌮', '🍣', '🎮', '🎯', '💪', '🧠', '🖥️', '📱', '💻', '🔐', '⚡'
+                ];
+                const current = profile.avatar;
+                grid.innerHTML = avatars.map(a =>
+                    `<button class="${a===current?'active':''}" data-avatar="${a}">${a}</button>`
+                ).join('');
+                grid.querySelectorAll('button').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        profile.avatar = this.dataset.avatar;
+                        saveProfile();
+                        renderAvatarGrid();
+                        updateUI();
+                        showToast('Аватар обновлён', 'info');
+                    });
+                });
+            }
+
+            // ----- DAILY BONUS -----
+            document.getElementById('dailyBonusBtn').addEventListener('click', function() {
+                const today = new Date().toDateString();
+                if (profile.dailyBonusDate === today) {
+                    showToast('Вы уже забирали бонус сегодня', 'info');
+                    return;
+                }
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yestStr = yesterday.toDateString();
+                if (profile.dailyBonusDate === yestStr) {
+                    profile.dailyStreak = (profile.dailyStreak || 0) + 1;
+                } else {
+                    profile.dailyStreak = 1;
+                }
+                profile.dailyBonusDate = today;
+                addXp(profile.settings.dailyBonusXp || 5);
+                addCoins(profile.settings.dailyBonusCoins || 2);
+                showToast(`Бонус получен! +${profile.settings.dailyBonusXp} XP, +${profile.settings.dailyBonusCoins} монет`,
+                    'success');
+                saveProfile();
+                updateUI();
+            });
+
+            // ----- SETTINGS -----
+            document.getElementById('saveSettingsBtn').addEventListener('click', function() {
+                profile.settings.xpPerCorrect = parseInt(document.getElementById('setXpCorrect').value) || 3;
+                profile.settings.xpPerLearn = parseInt(document.getElementById('setXpLearn').value) || 5;
+                profile.settings.coinPerCorrect = parseInt(document.getElementById('setCoinCorrect').value) || 1;
+                profile.settings.coinPerLearn = parseInt(document.getElementById('setCoinLearn').value) || 2;
+                profile.settings.dailyBonusXp = parseInt(document.getElementById('setDailyXp').value) || 5;
+                profile.settings.dailyBonusCoins = parseInt(document.getElementById('setDailyCoins').value) || 2;
+                saveProfile();
+                showToast('Настройки сохранены', 'success');
+            });
+
+            // ----- THEME -----
+            document.getElementById('themeSelect').addEventListener('change', function() {
+                const theme = this.value;
+                applyTheme(theme);
+                saveProfile();
+                updateUI();
+                showToast(`Тема изменена на ${theme}`, 'info');
+            });
+
+            // ----- NAME -----
+            document.getElementById('profileName').addEventListener('change', function() {
+                profile.name = this.value.trim() || 'Ученик';
+                saveProfile();
+                updateUI();
+            });
+
+            // ----- EXPORT / IMPORT / RESET -----
+            document.getElementById('exportDataBtn').addEventListener('click', function() {
+                const data = { terms, profile, testHistory };
+                const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'dictionary_data.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            document.getElementById('importDataBtn').addEventListener('click', function() {
+                document.getElementById('importFileInput').click();
+            });
+            document.getElementById('importFileInput').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if (data.terms && data.profile && data.testHistory) {
+                            if (confirm('Импорт заменит все текущие данные. Продолжить?')) {
+                                terms = data.terms;
+                                profile = data.profile;
+                                testHistory = data.testHistory;
+                                saveProfile();
+                                updateUI();
+                                showToast('Данные импортированы', 'success');
+                            }
+                        } else { showToast('Неверный формат файла', 'error'); }
+                    } catch (err) { showToast('Ошибка чтения файла', 'error'); }
+                };
+                reader.readAsText(file);
+                this.value = '';
+            });
+
+            document.getElementById('resetDataBtn').addEventListener('click', function() {
+                if (confirm('ВСЕ ДАННЫЕ БУДУТ УДАЛЕНЫ. Продолжить?')) {
+                    terms = defaultTerms.map(t => ({ ...t, added: new Date().toISOString() }));
+                    profile = {
+                        name: 'Ученик',
+                        avatar: '📚',
+                        theme: 'light',
+                        level: 1,
+                        xp: 0,
+                        coins: 0,
+                        dailyBonusDate: null,
+                        dailyStreak: 0,
+                        settings: {
+                            xpPerCorrect: 3,
+                            xpPerLearn: 5,
+                            coinPerCorrect: 1,
+                            coinPerLearn: 2,
+                            dailyBonusXp: 5,
+                            dailyBonusCoins: 2
+                        }
+                    };
+                    testHistory = [];
+                    saveProfile();
+                    updateUI();
+                    showToast('Все данные сброшены', 'info');
+                }
+            });
+
+            // ----- NAVIGATION (sidebar + hamburger) -----
+            function switchTab(tabId) {
+                document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+                document.getElementById('tab-' + tabId).classList.add('active');
+                document.querySelectorAll('.sidebar nav button').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tab === tabId);
+                });
+                // обновить заголовок
+                const titles = {
+                    dashboard: 'Дашборд',
+                    library: 'Библиотека терминов',
+                    test: 'Тестирование',
+                    stats: 'Статистика',
+                    profile: 'Профиль'
+                };
+                document.getElementById('pageTitle').textContent = titles[tabId] || tabId;
+                // закрыть мобильное меню
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebarOverlay').classList.remove('show');
+                // обновить контент
+                if (tabId === 'stats') renderStats();
+                if (tabId === 'library') renderTermTable();
+                if (tabId === 'dashboard') updateUI();
+                if (tabId === 'profile') updateUI();
+            }
+
+            document.querySelectorAll('.sidebar nav button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+
+            // Hamburger
+            document.getElementById('hamburgerBtn').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.toggle('open');
+                document.getElementById('sidebarOverlay').classList.toggle('show');
+            });
+            document.getElementById('sidebarOverlay').addEventListener('click', function() {
+                document.getElementById('sidebar').classList.remove('open');
+                this.classList.remove('show');
+            });
+
+            // ----- ADD TERM & START TEST -----
+            document.getElementById('addTermBtn').addEventListener('click', showAddTermModal);
+            document.getElementById('startTestBtn').addEventListener('click', startTest);
+
+            // ----- FILTERS -----
+            document.querySelectorAll('#searchInput, #categoryFilter, #difficultyFilter, #statusFilter, #sortSelect')
+                .forEach(el => {
+                    el.addEventListener('input', renderTermTable);
+                    el.addEventListener('change', renderTermTable);
+                });
+
+            // ----- STATS FILTERS -----
+            document.querySelectorAll('#statsFilters button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('#statsFilters button').forEach(b => b.classList.remove(
+                    'active'));
+                    this.classList.add('active');
+                    statsPeriod = this.dataset.period;
+                    renderStats();
+                });
+            });
+
+            // ----- INIT -----
+            if (!localStorage.getItem(STORE_PREFIX + 'terms')) {
+                setStore('terms', defaultTerms);
+                setStore('profile', profile);
+                setStore('testHistory', []);
+            }
+            terms = getStore('terms', defaultTerms);
+            profile = getStore('profile', {
+                name: 'Ученик',
+                avatar: '📚',
+                theme: 'light',
+                level: 1,
+                xp: 0,
+                coins: 0,
+                dailyBonusDate: null,
+                dailyStreak: 0,
+                settings: {
+                    xpPerCorrect: 3,
+                    xpPerLearn: 5,
+                    coinPerCorrect: 1,
+                    coinPerLearn: 2,
+                    dailyBonusXp: 5,
+                    dailyBonusCoins: 2
+                }
+            });
+            testHistory = getStore('testHistory', []);
+            profile.level = calcLevel(profile.xp);
+            saveProfile();
+            applyTheme(profile.theme);
+            updateUI();
+            switchTab('dashboard');
+
+        })();
+    </script>
+</body>
+</html>
